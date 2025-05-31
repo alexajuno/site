@@ -89,4 +89,3 @@ Each project includes:
 | `/tags`    | Explore posts by tag                                |
 | `/rss.xml` | RSS feed for blog (can split essays and notes)      |
 | `/now`     | Optional “Now” page — current activities and focus  |
-| Comments   | GitHub-based comment system (e.g., Giscus)          |
