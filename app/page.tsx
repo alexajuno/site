@@ -1,103 +1,145 @@
-import Image from "next/image";
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import {Github, Linkedin, Mail, ExternalLink, ArrowRight } from "lucide-react"
+import Link from "next/link"
 
-export default function Home() {
+export default function Component() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="min-h-screen bg-gray-950 text-gray-100">
+      {/* Header */}
+      <header className="border-b border-gray-800 bg-gray-950/80 backdrop-blur-sm sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4">
+          <nav className="flex items-center justify-between">
+            <Link href="/" className="text-xl font-bold text-white hover:text-gray-300 transition-colors">
+              Ajuno Labs
+            </Link>
+            <div className="flex items-center space-x-8">
+              <Link href="/blog" className="text-gray-300 hover:text-white transition-colors font-medium">
+                Blog
+              </Link>
+              <Link href="/projects" className="text-gray-300 hover:text-white transition-colors font-medium">
+                Projects
+              </Link>
+              <Link href="/about" className="text-gray-300 hover:text-white transition-colors font-medium">
+                About
+              </Link>
+            </div>
+          </nav>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+      </header>
+
+      {/* Hero Section */}
+      <section className="py-20 lg:py-32">
+        <div className="container mx-auto px-4 text-center">
+          <h1 className="text-5xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+            Ideas, Experiments, and Essays
+          </h1>
+          <p className="text-xl lg:text-2xl text-gray-400 mb-8 max-w-2xl mx-auto">A digital garden by Giao Le</p>
+          <Button
+            size="lg"
+            className="bg-white text-gray-950 hover:bg-gray-200 font-semibold px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
+          >
+            Read the Blog
+            <ArrowRight className="ml-2 h-5 w-5" />
+          </Button>
+        </div>
+      </section>
+
+      {/* Featured Content */}
+      <section className="py-16 lg:py-24">
+        <div className="container mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
+            {/* Featured Blog Post */}
+            <Card className="bg-gray-900/50 border-gray-800 shadow-2xl hover:shadow-3xl transition-all duration-300 hover:bg-gray-900/70 rounded-2xl">
+              <CardHeader className="pb-4">
+                <div className="text-sm text-gray-500 mb-2">Featured Post</div>
+                <CardTitle className="text-2xl lg:text-3xl font-bold text-white mb-3">
+                  Building a Second Brain in the Digital Age
+                </CardTitle>
+                <CardDescription className="text-gray-400 text-base leading-relaxed">
+                  Exploring how digital tools can augment our thinking and creativity. A deep dive into personal
+                  knowledge management systems and the art of connecting ideas across domains.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <Link
+                  href="/blog/building-second-brain"
+                  className="inline-flex items-center text-white hover:text-gray-300 font-medium transition-colors group"
+                >
+                  Read More
+                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </CardContent>
+            </Card>
+
+            {/* Featured Project */}
+            <Card className="bg-gray-900/50 border-gray-800 shadow-2xl hover:shadow-3xl transition-all duration-300 hover:bg-gray-900/70 rounded-2xl">
+              <CardHeader className="pb-4">
+                <div className="text-sm text-gray-500 mb-2">Featured Project</div>
+                <CardTitle className="text-2xl lg:text-3xl font-bold text-white mb-3">Neural Garden</CardTitle>
+                <CardDescription className="text-gray-400 text-base leading-relaxed">
+                  An experimental note-taking app that uses AI to surface connections between ideas. Built with Next.js,
+                  TypeScript, and OpenAI's API to create a living knowledge graph.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg"
+                  >
+                    <Github className="mr-2 h-4 w-4" />
+                    GitHub
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg"
+                  >
+                    <ExternalLink className="mr-2 h-4 w-4" />
+                    Live Demo
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-gray-800 py-12 mt-20">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row items-center justify-between">
+            <div className="mb-6 md:mb-0">
+              <p className="text-gray-400">© {new Date().getFullYear()} Ajuno Labs. All rights reserved.</p>
+            </div>
+            <div className="flex items-center space-x-6">
+              <Link
+                href="https://github.com"
+                className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-800 rounded-lg"
+                aria-label="GitHub"
+              >
+                <Github className="h-5 w-5" />
+              </Link>
+              <Link
+                href="https://linkedin.com"
+                className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-800 rounded-lg"
+                aria-label="LinkedIn"
+              >
+                <Linkedin className="h-5 w-5" />
+              </Link>
+              <Link
+                href="mailto:hello@ajunolabs.com"
+                className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-800 rounded-lg"
+                aria-label="Email"
+              >
+                <Mail className="h-5 w-5" />
+              </Link>
+            </div>
+          </div>
+        </div>
       </footer>
     </div>
-  );
+  )
 }
