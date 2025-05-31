@@ -17,4 +17,4 @@
 | Platform | Description |
 |----------|-------------|
 | [Vercel](https://vercel.com/) | Hosting and deployment platform with CI/CD from GitHub |
-| GitHub | Source control and version tracking |
+| [GitHub](https://github.com/) | Source control and version tracking |
