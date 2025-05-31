@@ -63,6 +63,3 @@ Each project includes:
 - `/tags` — explore by topic
 - `/rss.xml` — RSS feed for blog
 - `/now` — optional "Now" page (what you're currently working on)
-
----
-
