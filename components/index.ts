@@ -1,0 +1,6 @@
+export { Header } from "./header"
+export { Footer } from "./footer"
+export { HeroSection } from "./hero-section"
+export { FeaturedContent } from "./featured-content"
+export { ModeToggle } from "./mode-toggle"
+export { ThemeProvider } from "./theme-provider" 
