@@ -116,23 +116,29 @@ export default function Component() {
             </div>
             <div className="flex items-center space-x-6">
               <Link
-                href="https://github.com"
+                href="https://github.com/alexajuno"
                 className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-800 rounded-lg"
                 aria-label="GitHub"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <Github className="h-5 w-5" />
               </Link>
               <Link
-                href="https://linkedin.com"
+                href="https://www.linkedin.com/in/giao-le-02606b323/"
                 className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-800 rounded-lg"
                 aria-label="LinkedIn"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <Linkedin className="h-5 w-5" />
               </Link>
               <Link
-                href="mailto:hello@ajunolabs.com"
+                href="mailto:giolynx@gmail.com"
                 className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-800 rounded-lg"
                 aria-label="Email"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <Mail className="h-5 w-5" />
               </Link>
