@@ -17,6 +17,16 @@ enum Category {
   LIFE
 }
 
+model Tag {
+  id        String    @id() @default(cuid())
+  name      String    @unique()
+  slug      String    @unique()
+  createdAt DateTime  @default(now())
+  posts     PostTag[]
+
+  @@map("tags")
+}
+
 model Post {
   id        String    @id() @default(cuid())
   slug      String    @unique()
@@ -29,8 +39,20 @@ model Post {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt()
   comments  Comment[]
+  postTags  PostTag[]
 
   @@map("posts")
+}
+
+model PostTag {
+  id     String @id() @default(cuid())
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId  String
+
+  @@unique([postId, tagId])
+  @@map("post_tags")
 }
 
 model Comment {

@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { Category } from '@prisma/client'
-import { getAllPosts, searchPosts, createComment, getPostBySlug } from './db'
+import { getAllPosts, searchPosts, createComment, getPostBySlug, searchTags, getAllTags } from './db'
 
 // Post actions
 export async function getPostsAction(category?: string, search?: string) {
@@ -105,5 +105,26 @@ export async function createCommentObjectAction(data: {
   } catch (error) {
     console.error('Error creating comment:', error)
     return { success: false, error: 'Failed to create comment' }
+  }
+}
+
+// Tag actions
+export async function searchTagsAction(query: string) {
+  try {
+    const tags = await searchTags(query)
+    return { success: true, data: tags }
+  } catch (error) {
+    console.error('Error searching tags:', error)
+    return { success: false, error: 'Failed to search tags' }
+  }
+}
+
+export async function getAllTagsAction() {
+  try {
+    const tags = await getAllTags()
+    return { success: true, data: tags }
+  } catch (error) {
+    console.error('Error fetching tags:', error)
+    return { success: false, error: 'Failed to fetch tags' }
   }
 } 

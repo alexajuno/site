@@ -1,20 +1,22 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { PostList } from "@/components/post-list"
+import { PostListWrapper } from "@/components/post-list-wrapper"
 import { SearchInput } from "@/components/search-input"
+import { TagFilter } from "@/components/tag-filter"
 import { getPostsAction } from "@/lib/actions"
 import { Post } from "@/lib/types"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 
 interface BlogPageProps {
-  searchParams: Promise<{ search?: string; category?: string }>
+  searchParams: Promise<{ search?: string; category?: string; tags?: string }>
 }
 
 export default function BlogPage({ searchParams }: BlogPageProps) {
   const [filteredPosts, setFilteredPosts] = useState<Post[]>([])
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState<string>("all")
+  const [selectedTags, setSelectedTags] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
   // Load initial data and URL params
@@ -24,16 +26,25 @@ export default function BlogPage({ searchParams }: BlogPageProps) {
         const params = await searchParams
         const urlSearchQuery = params.search || ""
         const urlCategory = params.category || "all"
+        const urlTags = params.tags ? params.tags.split(',').filter(Boolean) : []
         
         setSearchQuery(urlSearchQuery)
         setSelectedCategory(urlCategory)
+        setSelectedTags(urlTags)
         
         // Load posts based on category and search
         const categoryFilter = urlCategory === "all" ? undefined : urlCategory
         const result = await getPostsAction(categoryFilter, urlSearchQuery || undefined)
         
         if (result.success && result.data) {
-          setFilteredPosts(result.data)
+          // Filter by tags if any selected
+          let posts = result.data
+          if (urlTags.length > 0) {
+            posts = posts.filter(post => 
+              urlTags.some(tag => post.tags.includes(tag))
+            )
+          }
+          setFilteredPosts(posts)
         } else {
           console.error("Error loading posts:", result.error)
           setFilteredPosts([])
@@ -52,59 +63,44 @@ export default function BlogPage({ searchParams }: BlogPageProps) {
   // Handle category change
   const handleCategoryChange = async (category: string) => {
     setSelectedCategory(category)
+    await filterPosts(category, searchQuery, selectedTags)
+  }
+
+  const handleSearch = useCallback(async (query: string) => {
+    setSearchQuery(query)
+    await filterPosts(selectedCategory, query, selectedTags)
+  }, [selectedCategory, selectedTags])
+
+  const handleTagsChange = useCallback(async (tags: string[]) => {
+    setSelectedTags(tags)
+    await filterPosts(selectedCategory, searchQuery, tags)
+  }, [selectedCategory, searchQuery])
+
+  // Centralized filter function
+  const filterPosts = async (category: string, search: string, tags: string[]) => {
     setIsLoading(true)
     
     try {
       const categoryFilter = category === "all" ? undefined : category
-      const result = await getPostsAction(categoryFilter, searchQuery || undefined)
+      const result = await getPostsAction(categoryFilter, search || undefined)
       
       if (result.success && result.data) {
-        setFilteredPosts(result.data)
+        // Filter by tags if any selected
+        let posts = result.data
+        if (tags.length > 0) {
+          posts = posts.filter(post => 
+            tags.some(tag => post.tags.includes(tag))
+          )
+        }
+        setFilteredPosts(posts)
       } else {
-        console.error("Error filtering by category:", result.error)
+        console.error("Error filtering posts:", result.error)
         setFilteredPosts([])
       }
     } catch (error) {
-      console.error("Error filtering by category:", error)
+      console.error("Error filtering posts:", error)
     } finally {
       setIsLoading(false)
-    }
-  }
-
-  // Memoize handleSearch to prevent infinite re-renders
-  const handleSearch = useCallback(async (query: string) => {
-    setSearchQuery(query)
-    setIsLoading(true)
-    
-    try {
-      const categoryFilter = selectedCategory === "all" ? undefined : selectedCategory
-      const result = await getPostsAction(categoryFilter, query || undefined)
-      
-      if (result.success && result.data) {
-        setFilteredPosts(result.data)
-      } else {
-        console.error("Error searching posts:", result.error)
-        setFilteredPosts([])
-      }
-    } catch (error) {
-      console.error("Error searching posts:", error)
-    } finally {
-      setIsLoading(false)
-    }
-  }, [selectedCategory])
-
-  const getDisplayTitle = () => {
-    if (searchQuery) {
-      return `Search results for "${searchQuery}"`
-    }
-    
-    switch (selectedCategory) {
-      case "tech":
-        return "Tech Posts"
-      case "life":
-        return "Life Posts"
-      default:
-        return "All Posts"
     }
   }
 
@@ -133,20 +129,32 @@ export default function BlogPage({ searchParams }: BlogPageProps) {
       <div className="space-y-8">
         {/* Header */}
         <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold tracking-tight">{getDisplayTitle()}</h1>
+          <h1 className="text-4xl font-bold tracking-tight">Blog</h1>
           <p className="text-muted-foreground text-lg">
             {filteredPosts.length} {filteredPosts.length === 1 ? "post" : "posts"} found
           </p>
         </div>
 
-        {/* Search Input - Full width at top */}
-        <div className="flex justify-center">
-          <SearchInput
-            placeholder="Search posts..."
-            value={searchQuery}
-            onSearch={handleSearch}
-            className="w-full max-w-md"
-          />
+        {/* Filters Section */}
+        <div className="space-y-6">
+          {/* Search Input */}
+          <div className="flex justify-center">
+            <SearchInput
+              placeholder="Search posts..."
+              value={searchQuery}
+              onSearch={handleSearch}
+              className="w-full max-w-md"
+            />
+          </div>
+
+          {/* Tag Filter */}
+          <div className="flex justify-center">
+            <TagFilter
+              selectedTags={selectedTags}
+              onTagsChange={handleTagsChange}
+              className="w-full max-w-2xl"
+            />
+          </div>
         </div>
 
         {/* Category Tabs */}
@@ -159,18 +167,18 @@ export default function BlogPage({ searchParams }: BlogPageProps) {
             </TabsList>
           </div>
           
-          {/* Posts Content */}
+          {/* Posts Content with Streaming */}
           <div className="min-h-[400px] mt-8">
             <TabsContent value="all">
-              <PostList posts={filteredPosts} />
+              <PostListWrapper posts={filteredPosts} />
             </TabsContent>
             
             <TabsContent value="tech">
-              <PostList posts={filteredPosts} />
+              <PostListWrapper posts={filteredPosts} />
             </TabsContent>
             
             <TabsContent value="life">
-              <PostList posts={filteredPosts} />
+              <PostListWrapper posts={filteredPosts} />
             </TabsContent>
           </div>
         </Tabs>

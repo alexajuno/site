@@ -12,6 +12,22 @@ enum Category {
   LIFE
 }
 
+model Tag {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  
+  // Relations
+  posts     PostTag[]
+  
+  // Access control policies
+  @@allow('read', true)
+  @@allow('all', true) // For now, allow all operations
+  
+  @@map("tags")
+}
+
 model Post {
   id        String   @id @default(cuid())
   slug      String   @unique
@@ -19,19 +35,32 @@ model Post {
   content   String
   excerpt   String
   category  Category @default(TECH)
-  tags      String[]
+  tags      String[] // Keep this for backward compatibility during migration
   published Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
   // Relations
   comments  Comment[]
+  postTags  PostTag[]
   
   // Access control policies
   @@allow('read', published == true)
   @@allow('all', true) // For now, allow all operations (you can restrict this later)
   
   @@map("posts")
+}
+
+model PostTag {
+  id     String @id @default(cuid())
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId  String
+  
+  @@unique([postId, tagId])
+  @@allow('all', true)
+  @@map("post_tags")
 }
 
 model Comment {

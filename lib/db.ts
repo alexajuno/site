@@ -172,4 +172,52 @@ export async function getCommentsByPostId(postId: string) {
     content: comment.content,
     timestamp: comment.createdAt.toISOString(),
   }))
+}
+
+// Tag functions - working with existing string array for now
+export async function searchTags(query: string) {
+  // Get all posts and extract unique tags that match the query
+  const posts = await prisma.post.findMany({
+    where: { published: true },
+    select: { tags: true },
+  })
+
+  const allTags = posts.flatMap(post => post.tags)
+  const uniqueTags = [...new Set(allTags)]
+  
+  const matchingTags = uniqueTags
+    .filter(tag => tag.toLowerCase().includes(query.toLowerCase()))
+    .map(tag => ({
+      id: tag, // Using tag name as ID for now
+      name: tag,
+      slug: tag.toLowerCase().replace(/\s+/g, '-'),
+      count: allTags.filter(t => t === tag).length,
+    }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 10)
+
+  return matchingTags
+}
+
+export async function getAllTags() {
+  const posts = await prisma.post.findMany({
+    where: { published: true },
+    select: { tags: true },
+  })
+
+  const tagCounts: Record<string, number> = {}
+  posts.forEach(post => {
+    post.tags.forEach(tag => {
+      tagCounts[tag] = (tagCounts[tag] || 0) + 1
+    })
+  })
+
+  return Object.entries(tagCounts)
+    .map(([name, count]) => ({ 
+      id: name,
+      name, 
+      slug: name.toLowerCase().replace(/\s+/g, '-'),
+      count 
+    }))
+    .sort((a, b) => b.count - a.count)
 } 

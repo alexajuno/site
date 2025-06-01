@@ -1,4 +1,7 @@
+"use client"
+
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Calendar, MessageCircle } from "lucide-react"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -10,6 +13,8 @@ interface PostCardProps {
 }
 
 export function PostCard({ post }: PostCardProps) {
+  const router = useRouter()
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
     return date.toLocaleDateString("en-US", {
@@ -36,6 +41,16 @@ export function PostCard({ post }: PostCardProps) {
 
   const formatCategory = (category: string) => {
     return category.charAt(0) + category.slice(1).toLowerCase()
+  }
+
+  const handleTagClick = (tag: string, e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    
+    // Navigate to blog page with tag filter
+    const params = new URLSearchParams()
+    params.set('tags', tag)
+    router.push(`/blog?${params.toString()}`)
   }
 
   return (
@@ -69,11 +84,14 @@ export function PostCard({ post }: PostCardProps) {
 
         <div className="flex flex-wrap gap-2">
           {post.tags.map((tag: string) => (
-            <Link key={tag} href={`/tag/${tag}`}>
-              <Badge variant="outline" className="hover:bg-primary hover:text-primary-foreground">
-                {tag}
-              </Badge>
-            </Link>
+            <Badge 
+              key={tag} 
+              variant="outline" 
+              className="hover:bg-primary hover:text-primary-foreground cursor-pointer transition-colors"
+              onClick={(e) => handleTagClick(tag, e)}
+            >
+              {tag}
+            </Badge>
           ))}
         </div>
 
