@@ -30,7 +30,7 @@ import {
   User,
   Tag
 } from "lucide-react"
-import { getAllTagsAction } from "@/lib/actions"
+import { getPostsAction } from "@/lib/actions"
 import { useBlog } from "@/components/blog-context"
 
 interface AppSidebarProps {
@@ -84,11 +84,12 @@ export function AppSidebar({ className }: AppSidebarProps) {
 
     const loadTags = async () => {
       try {
-        const result = await getAllTagsAction()
+        const result = await getPostsAction()
         if (result.success && result.data) {
-          const tags = result.data.map(tag => tag.name).sort()
+          const tags = Array.from(new Set(result.data.flatMap(post => post.tags)))
+            .sort()
           setAllTags(tags)
-          setTotalPosts(result.data.reduce((sum, tag) => sum + tag.count, 0))
+          setTotalPosts(result.data.length)
         }
       } catch (error) {
         console.error("Error loading tags:", error)
