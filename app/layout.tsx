@@ -4,6 +4,9 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
+import { BlogProvider } from "@/components/blog-context";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,13 +39,20 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex flex-col min-h-screen">
-            <Header />
-            <main className="flex-1">
-              {children}
-            </main>
-            <Footer />
-          </div>
+          <BlogProvider>
+            <SidebarProvider defaultOpen={false}>
+              <div className="flex min-h-screen w-full">
+                <AppSidebar />
+                <div className="flex flex-col flex-1 min-h-screen">
+                  <Header />
+                  <main className="flex-1">
+                    {children}
+                  </main>
+                  <Footer />
+                </div>
+              </div>
+            </SidebarProvider>
+          </BlogProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -1,0 +1,101 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Server Actions Guidelines
+
+## Overview
+Use Next.js Server Actions instead of API routes for server-side operations. Server Actions provide better type safety, automatic serialization, and improved developer experience.
+
+## Key Principles
+
+### 1. "use server" Directive
+- Always add `'use server'` at the top of files containing server actions
+- Server actions must be async functions
+- Can be defined in separate files or inline within components
+
+### 2. File Organization
+- Create server actions in [lib/actions.ts](mdc:lib/actions.ts)
+- Group related actions together (e.g., post actions, comment actions)
+- Use descriptive function names ending with "Action"
+
+### 3. Form Handling
+```typescript
+// For form submissions
+export async function createCommentAction(formData: FormData) {
+  'use server'
+  
+  const postId = formData.get('postId') as string
+  const author = formData.get('author') as string
+  // ... validation and processing
+}
+```
+
+### 4. Programmatic Usage
+```typescript
+// For programmatic calls from client components
+export async function createCommentObjectAction(data: {
+  postId: string
+  author: string
+  content: string
+}) {
+  'use server'
+  // ... processing
+}
+```
+
+### 5. Error Handling
+- Always wrap server actions in try-catch blocks
+- Return consistent response objects: `{ success: boolean, data?: any, error?: string }`
+- Log errors on the server side for debugging
+
+### 6. Revalidation
+- Use `revalidatePath()` to update cached data after mutations
+- Revalidate specific paths that display the updated data
+- Import from `next/cache`
+
+### 7. Security
+- Validate all input data
+- Implement proper authentication and authorization
+- Never trust client-provided data
+
+## Usage Examples
+
+### In Forms (Client Components)
+```tsx
+import { createCommentAction } from '@/lib/actions'
+
+export function CommentForm() {
+  return (
+    <form action={createCommentAction}>
+      <input name="postId" type="hidden" value={postId} />
+      <input name="author" required />
+      <textarea name="content" required />
+      <button type="submit">Submit</button>
+    </form>
+  )
+}
+```
+
+### Programmatic Usage
+```tsx
+import { createCommentObjectAction } from '@/lib/actions'
+
+const handleSubmit = async (data: CommentData) => {
+  const result = await createCommentObjectAction(data)
+  if (result.success) {
+    // Handle success
+  } else {
+    // Handle error
+  }
+}
+```
+
+## Benefits Over API Routes
+- Better type safety
+- Automatic request/response serialization
+- Progressive enhancement
+- Simplified error handling
+- Built-in CSRF protection
+- Better integration with React Server Components

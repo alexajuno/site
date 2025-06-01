@@ -1,0 +1,33 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+# shadcn/ui Components
+
+This project uses **shadcn/ui** for UI components, not direct Radix UI imports.
+
+## Installation:
+- Use `pnpm dlx shadcn@latest add <component>` to install components
+- Components are installed to [components/ui/](mdc:components/ui/)
+- Configuration is in [components.json](mdc:components.json)
+
+## Available Components:
+- `tabs` - Already installed in [components/ui/tabs.tsx](mdc:components/ui/tabs.tsx)
+- `button` - Already installed
+- `card` - Already installed
+- `input` - Already installed
+- `textarea` - Already installed
+- `avatar` - Already installed
+
+## Usage:
+```tsx
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+```
+
+## Important:
+- Never import directly from `@radix-ui/*` packages
+- Always use the shadcn/ui components from `@/components/ui/`
+- After installing new components, remove any conflicting direct Radix UI dependencies
