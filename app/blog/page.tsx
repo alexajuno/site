@@ -1,116 +1,143 @@
-"use client"
+"use client";
 
-import { useState, useEffect, useCallback } from "react"
-import { PostListWrapper } from "@/components/post-list-wrapper"
-import { SearchInput } from "@/components/search-input"
-import { TagFilter } from "@/components/tag-filter"
-import { getPostsAction } from "@/lib/actions"
-import { Post } from "@/lib/types"
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import { useState, useEffect, useCallback } from "react";
+import { PostListWrapper } from "@/components/post-list-wrapper";
+import { SearchInput } from "@/components/search-input";
+import { BlogSidebar } from "@/components/blog-sidebar";
+import { BlogPagination } from "@/components/blog-pagination";
+import { getPostsAction } from "@/lib/actions";
+import { Post } from "@/lib/types";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { Filter } from "lucide-react";
 
 interface BlogPageProps {
-  searchParams: Promise<{ search?: string; category?: string; tags?: string }>
+  searchParams: Promise<{
+    search?: string;
+    category?: string;
+    tags?: string;
+    page?: string;
+  }>;
 }
 
+const POSTS_PER_PAGE = 6;
+
 export default function BlogPage({ searchParams }: BlogPageProps) {
-  const [filteredPosts, setFilteredPosts] = useState<Post[]>([])
-  const [searchQuery, setSearchQuery] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState<string>("all")
-  const [selectedTags, setSelectedTags] = useState<string[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+  const [allPosts, setAllPosts] = useState<Post[]>([]);
+  const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Calculate pagination
+  const totalPosts = filteredPosts.length;
+  const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
+  const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
+  const endIndex = startIndex + POSTS_PER_PAGE;
+  const currentPosts = filteredPosts.slice(startIndex, endIndex);
 
   // Load initial data and URL params
   useEffect(() => {
     const loadData = async () => {
       try {
-        const params = await searchParams
-        const urlSearchQuery = params.search || ""
-        const urlCategory = params.category || "all"
-        const urlTags = params.tags ? params.tags.split(',').filter(Boolean) : []
-        
-        setSearchQuery(urlSearchQuery)
-        setSelectedCategory(urlCategory)
-        setSelectedTags(urlTags)
-        
-        // Load posts based on category and search
-        const categoryFilter = urlCategory === "all" ? undefined : urlCategory
-        const result = await getPostsAction(categoryFilter, urlSearchQuery || undefined)
-        
+        const params = await searchParams;
+        const urlSearchQuery = params.search || "";
+        const urlCategory = params.category || "all";
+        const urlTags = params.tags
+          ? params.tags.split(",").filter(Boolean)
+          : [];
+        const urlPage = parseInt(params.page || "1", 10);
+
+        setSearchQuery(urlSearchQuery);
+        setSelectedCategory(urlCategory);
+        setSelectedTags(urlTags);
+        setCurrentPage(urlPage);
+
+        // Load all posts initially
+        const result = await getPostsAction();
         if (result.success && result.data) {
-          // Filter by tags if any selected
-          let posts = result.data
-          if (urlTags.length > 0) {
-            posts = posts.filter(post => 
-              urlTags.some(tag => post.tags.includes(tag))
-            )
-          }
-          setFilteredPosts(posts)
+          setAllPosts(result.data);
         } else {
-          console.error("Error loading posts:", result.error)
-          setFilteredPosts([])
+          console.error("Error loading posts:", result.error);
+          setAllPosts([]);
         }
       } catch (error) {
-        console.error("Error loading posts:", error)
-        setFilteredPosts([])
+        console.error("Error loading posts:", error);
+        setAllPosts([]);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
+    };
+
+    loadData();
+  }, [searchParams]);
+
+  // Filter posts whenever filters change
+  useEffect(() => {
+    if (allPosts.length === 0) return;
+
+    let filtered = [...allPosts];
+
+    // Filter by category
+    if (selectedCategory !== "all") {
+      filtered = filtered.filter(
+        (post) => post.category.toLowerCase() === selectedCategory.toLowerCase()
+      );
     }
 
-    loadData()
-  }, [searchParams])
+    // Filter by search query
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(
+        (post) =>
+          post.title.toLowerCase().includes(query) ||
+          post.excerpt.toLowerCase().includes(query) ||
+          post.content.toLowerCase().includes(query) ||
+          post.tags.some((tag) => tag.toLowerCase().includes(query))
+      );
+    }
+
+    // Filter by tags
+    if (selectedTags.length > 0) {
+      filtered = filtered.filter((post) =>
+        selectedTags.some((tag) => post.tags.includes(tag))
+      );
+    }
+
+    setFilteredPosts(filtered);
+
+    // Reset to first page when filters change
+    setCurrentPage(1);
+  }, [allPosts, selectedCategory, searchQuery, selectedTags]);
 
   // Handle category change
-  const handleCategoryChange = async (category: string) => {
-    setSelectedCategory(category)
-    await filterPosts(category, searchQuery, selectedTags)
-  }
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+  };
 
-  const handleSearch = useCallback(async (query: string) => {
-    setSearchQuery(query)
-    await filterPosts(selectedCategory, query, selectedTags)
-  }, [selectedCategory, selectedTags])
+  const handleSearch = useCallback((query: string) => {
+    setSearchQuery(query);
+  }, []);
 
-  const handleTagsChange = useCallback(async (tags: string[]) => {
-    setSelectedTags(tags)
-    await filterPosts(selectedCategory, searchQuery, tags)
-  }, [selectedCategory, searchQuery])
+  const handleTagsChange = useCallback((tags: string[]) => {
+    setSelectedTags(tags);
+  }, []);
 
-  // Centralized filter function
-  const filterPosts = async (category: string, search: string, tags: string[]) => {
-    setIsLoading(true)
-    
-    try {
-      const categoryFilter = category === "all" ? undefined : category
-      const result = await getPostsAction(categoryFilter, search || undefined)
-      
-      if (result.success && result.data) {
-        // Filter by tags if any selected
-        let posts = result.data
-        if (tags.length > 0) {
-          posts = posts.filter(post => 
-            tags.some(tag => post.tags.includes(tag))
-          )
-        }
-        setFilteredPosts(posts)
-      } else {
-        console.error("Error filtering posts:", result.error)
-        setFilteredPosts([])
-      }
-    } catch (error) {
-      console.error("Error filtering posts:", error)
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    // Scroll to top when page changes
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
         <div className="space-y-8">
           <div className="animate-pulse">
-            <div className="h-8 bg-muted rounded w-1/3 mb-2"></div>
-            <div className="h-4 bg-muted rounded w-1/4"></div>
+            <div className="h-8 bg-muted rounded w-1/3 mb-2 mx-auto"></div>
+            <div className="h-4 bg-muted rounded w-1/4 mx-auto"></div>
           </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
             {Array.from({ length: 4 }).map((_, i) => (
@@ -121,68 +148,88 @@ export default function BlogPage({ searchParams }: BlogPageProps) {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-6xl">
-      <div className="space-y-8">
-        {/* Header */}
-        <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold tracking-tight">Blog</h1>
-          <p className="text-muted-foreground text-lg">
-            {filteredPosts.length} {filteredPosts.length === 1 ? "post" : "posts"} found
-          </p>
+    <SidebarProvider defaultOpen={false}>
+      <SidebarTrigger>
+        <Filter className="h-4 w-4" />
+        <span>Filters & Tags</span>
+      </SidebarTrigger>
+      <div className="flex min-h-screen w-full">
+        {/* Sidebar */}
+        <BlogSidebar
+          selectedTags={selectedTags}
+          onTagsChange={handleTagsChange}
+        />
+
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col">
+          <div className="container mx-auto px-4 py-8 max-w-5xl">
+            <div className="space-y-8">
+              {/* Header */}
+              <div className="text-center space-y-4">
+                <h1 className="text-4xl font-bold tracking-tight">Blog</h1>
+
+                {/* Filter Toggle Button */}
+              </div>
+
+              {/* Search Input */}
+              <div className="flex justify-center">
+                <SearchInput
+                  placeholder="Search posts..."
+                  value={searchQuery}
+                  onSearch={handleSearch}
+                  className="w-full max-w-md"
+                />
+              </div>
+
+              {/* Category Tabs */}
+              <Tabs
+                value={selectedCategory}
+                onValueChange={handleCategoryChange}
+              >
+                <div className="flex justify-center">
+                  <TabsList className="grid w-full max-w-md grid-cols-3">
+                    <TabsTrigger value="all">All</TabsTrigger>
+                    <TabsTrigger value="tech">Tech</TabsTrigger>
+                    <TabsTrigger value="life">Life</TabsTrigger>
+                  </TabsList>
+                </div>
+
+                {/* Posts Content */}
+                <div className="min-h-[600px] mt-8">
+                  <TabsContent value={selectedCategory} className="space-y-8">
+                    {currentPosts.length > 0 ? (
+                      <>
+                        <PostListWrapper posts={currentPosts} />
+
+                        {/* Pagination */}
+                        <BlogPagination
+                          currentPage={currentPage}
+                          totalPages={totalPages}
+                          onPageChange={handlePageChange}
+                          className="mt-12"
+                        />
+                      </>
+                    ) : (
+                      <div className="text-center py-12">
+                        <p className="text-lg text-muted-foreground">
+                          No posts found matching your criteria.
+                        </p>
+                        <p className="text-sm text-muted-foreground mt-2">
+                          Try adjusting your search or filters.
+                        </p>
+                      </div>
+                    )}
+                  </TabsContent>
+                </div>
+              </Tabs>
+            </div>
+          </div>
         </div>
-
-        {/* Filters Section */}
-        <div className="space-y-6">
-          {/* Search Input */}
-          <div className="flex justify-center">
-            <SearchInput
-              placeholder="Search posts..."
-              value={searchQuery}
-              onSearch={handleSearch}
-              className="w-full max-w-md"
-            />
-          </div>
-
-          {/* Tag Filter */}
-          <div className="flex justify-center">
-            <TagFilter
-              selectedTags={selectedTags}
-              onTagsChange={handleTagsChange}
-              className="w-full max-w-2xl"
-            />
-          </div>
-        </div>
-
-        {/* Category Tabs */}
-        <Tabs value={selectedCategory} onValueChange={handleCategoryChange}>
-          <div className="flex justify-center">
-            <TabsList className="grid w-full max-w-md grid-cols-3">
-              <TabsTrigger value="all">All</TabsTrigger>
-              <TabsTrigger value="tech">Tech</TabsTrigger>
-              <TabsTrigger value="life">Life</TabsTrigger>
-            </TabsList>
-          </div>
-          
-          {/* Posts Content with Streaming */}
-          <div className="min-h-[400px] mt-8">
-            <TabsContent value="all">
-              <PostListWrapper posts={filteredPosts} />
-            </TabsContent>
-            
-            <TabsContent value="tech">
-              <PostListWrapper posts={filteredPosts} />
-            </TabsContent>
-            
-            <TabsContent value="life">
-              <PostListWrapper posts={filteredPosts} />
-            </TabsContent>
-          </div>
-        </Tabs>
       </div>
-    </div>
-  )
+    </SidebarProvider>
+  );
 }
