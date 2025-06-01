@@ -231,6 +231,7 @@ export function AppSidebar({ className }: AppSidebarProps) {
                     <div className="space-y-1 max-h-64 overflow-y-auto">
                       {filteredTags.map((tag) => (
                         <button
+                          type="button"
                           key={tag}
                           onClick={() => handleTagClick(tag)}
                           className={`w-full text-left px-2 py-1 rounded text-sm transition-colors ${
