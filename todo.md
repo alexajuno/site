@@ -1,2 +1,6 @@
 - [x] Outdated GitHub, LinkedIn lucide-react icons 
 - [ ] Icon for the website
+- [ ] Comment feature
+    - [ ] Implement comments system
+    - [ ] Set up database for comments persistence
+    - [ ] Add comment moderation features

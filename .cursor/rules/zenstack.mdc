@@ -1,0 +1,142 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+# ZenStack Integration
+
+This project uses **ZenStack** for database schema management with access control policies.
+
+## Key Files:
+- [schema.zmodel](mdc:schema.zmodel) - Main ZenStack schema file (edit this, not schema.prisma)
+- [prisma/schema.prisma](mdc:prisma/schema.prisma) - Generated Prisma schema (auto-generated, don't edit)
+
+## Workflow:
+1. Edit [schema.zmodel](mdc:schema.zmodel) to modify database schema
+2. Run `pnpm dlx zenstack generate` to regenerate Prisma schema
+3. Run `pnpm dlx prisma db push` or `pnpm dlx prisma migrate dev` to update database
+
+## ZenStack Features Used:
+- **Access Control Policies**: `@@allow()` rules for fine-grained permissions
+- **Prisma Integration**: Automatic Prisma schema generation
+- **Enhanced PrismaClient**: Runtime access control enforcement
+
+## Important:
+- Never edit `prisma/schema.prisma` directly
+- Always use `schema.zmodel` as the source of truth
+- Access control policies are enforced at runtime through enhanced PrismaClient
+
+# ZenStack Guidelines
+
+## Overview
+Use ZenStack enhanced Prisma client for automatic access control, data validation, and other enhancements. ZenStack provides a transparent proxy over Prisma Client with additional security and validation features.
+
+## Key Principles
+
+### 1. Enhanced Client Setup
+- Always use the enhanced client from [lib/db.ts](mdc:lib/db.ts)
+- Import `enhance` from `@zenstackhq/runtime`
+- Create enhanced client: `enhance(basePrisma)`
+
+### 2. Schema Definition
+- Define models in [schema.zmodel](mdc:schema.zmodel) instead of `schema.prisma`
+- Use `@@allow()` and `@@deny()` for access control policies
+- ZenStack generates the Prisma schema automatically
+
+### 3. Access Control Policies
+```zmodel
+model Post {
+  // ... fields
+  
+  // Access control policies
+  @@allow('read', published == true)  // Anyone can read published posts
+  @@allow('all', true)                // Allow all operations (customize as needed)
+}
+
+model Comment {
+  // ... fields
+  
+  // Access control policies
+  @@allow('read', true)     // Anyone can read comments
+  @@allow('create', true)   // Anyone can create comments
+  @@allow('update', false)  // No one can update comments
+  @@allow('delete', false)  // No one can delete comments
+}
+```
+
+### 4. Context-Aware Enhancement
+```typescript
+// For user-specific access control
+const db = enhance(basePrisma, { user: getCurrentUser() })
+
+// For anonymous access (current setup)
+const db = enhance(basePrisma)
+```
+
+### 5. Generation Workflow
+- Run `npx zenstack generate` after schema changes
+- This generates both Prisma schema and ZenStack runtime files
+- Restart dev server after generation
+
+### 6. Enhanced Features
+- **Access Policies**: Automatic enforcement of read/write permissions
+- **Data Validation**: Built-in validation based on schema rules
+- **Field Omission**: Automatically omit sensitive fields (use `@omit`)
+- **Password Hashing**: Automatic password hashing (use `@password`)
+
+## Usage Examples
+
+### Basic Database Operations
+```typescript
+import { prisma } from '@/lib/db'
+
+// All operations automatically respect access policies
+const posts = await prisma.post.findMany() // Only returns published posts
+const comment = await prisma.comment.create({ data: commentData })
+```
+
+### In Server Actions
+```typescript
+'use server'
+
+import { prisma } from '@/lib/db'
+
+export async function createCommentAction(formData: FormData) {
+  // ZenStack automatically validates and enforces policies
+  const comment = await prisma.comment.create({
+    data: {
+      postId: formData.get('postId') as string,
+      author: formData.get('author') as string,
+      content: formData.get('content') as string,
+    }
+  })
+  
+  return { success: true, data: comment }
+}
+```
+
+### Schema Enhancements
+```zmodel
+model User {
+  id       String @id @default(cuid())
+  email    String @unique
+  password String @password @omit  // Auto-hash and omit from results
+  
+  @@allow('create', true)
+  @@allow('read', auth() == this)  // Users can only read their own data
+}
+```
+
+## Benefits
+- **Security**: Automatic access control enforcement
+- **Validation**: Built-in data validation
+- **Simplicity**: No need for manual permission checks
+- **Type Safety**: Full TypeScript support
+- **Performance**: Minimal overhead over regular Prisma
+- **Compatibility**: Works with existing Prisma code
+
+## Important Notes
+- Enhanced client is cheap to create (no new DB connections)
+- Can use both enhanced and regular client in same app
+- Raw SQL queries bypass enhancements
+- Sequential transactions not supported (use interactive transactions)
