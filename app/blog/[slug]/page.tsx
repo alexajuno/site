@@ -92,7 +92,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             {post.tags && post.tags.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {post.tags.map((tag: string) => (
-                  <Link key={tag} href={`/blog?search=${encodeURIComponent(tag)}`}>
+                  <Link key={tag} href={`/blog?tags=${encodeURIComponent(tag)}`}>
                     <Badge variant="outline" className="hover:bg-primary hover:text-primary-foreground">
                       {tag}
                     </Badge>

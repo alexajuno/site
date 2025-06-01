@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { createCommentObjectAction } from "@/lib/actions"
 import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 
 interface CommentFormProps {
   postId: string
@@ -40,14 +41,16 @@ export function CommentForm({ postId }: CommentFormProps) {
           email: "",
           content: "",
         })
+        toast.success("Your comment has been posted!")
         // Refresh the page to show the new comment
         router.refresh()
       } else {
         console.error("Error creating comment:", result.error)
-        // You could add toast notification here
+        toast.error(result.error || "Failed to post comment. Please try again.")
       }
     } catch (error) {
       console.error("Error submitting comment:", error)
+      toast.error("Failed to post comment. Please try again.")
     } finally {
       setIsSubmitting(false)
     }

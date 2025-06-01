@@ -9,11 +9,11 @@ interface PostListWrapperProps {
   postsPerPage?: number
 }
 
-function PostListSkeleton() {
+function PostListSkeleton({ postsPerPage }: { postsPerPage: number }) {
   return (
     <div className="space-y-8">
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-        {Array.from({ length: 6 }).map((_, i) => (
+        {Array.from({ length: postsPerPage }).map((_, i) => (
           <div key={i} className="animate-pulse">
             <div className="h-48 bg-muted rounded-lg"></div>
           </div>
@@ -25,7 +25,7 @@ function PostListSkeleton() {
 
 export function PostListWrapper({ posts, postsPerPage = 6 }: PostListWrapperProps) {
   return (
-    <Suspense fallback={<PostListSkeleton />}>
+    <Suspense fallback={<PostListSkeleton postsPerPage={postsPerPage} />}>
       <PostList posts={posts} postsPerPage={postsPerPage} />
     </Suspense>
   )
