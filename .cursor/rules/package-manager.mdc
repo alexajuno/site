@@ -1,0 +1,25 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+# Package Manager Rule
+
+This project uses **pnpm** as the package manager, not npm or yarn.
+
+## Commands to use:
+- `pnpm install` - Install dependencies
+- `pnpm add <package>` - Add a dependency
+- `pnpm add -D <package>` - Add a dev dependency
+- `pnpm remove <package>` - Remove a dependency
+- `pnpm dlx <command>` - Execute a package (equivalent to npx)
+- `pnpm run <script>` - Run a script
+
+## Evidence:
+- [pnpm-lock.yaml](mdc:pnpm-lock.yaml) exists in the project root
+- [package.json](mdc:package.json) shows this is a pnpm-managed project
+
+## Important:
+- Never use `npm` or `yarn` commands
+- Always use `pnpm` equivalents
+- For shadcn/ui installations, use `pnpm dlx shadcn@latest add <component>`

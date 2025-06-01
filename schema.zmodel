@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Category {
+  TECH
+  LIFE
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  title     String
+  content   String
+  excerpt   String
+  category  Category @default(TECH)
+  tags      String[]
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  comments  Comment[]
+  
+  // Access control policies
+  @@allow('read', published == true)
+  @@allow('all', true) // For now, allow all operations (you can restrict this later)
+  
+  @@map("posts")
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  author    String
+  email     String?
+  createdAt DateTime @default(now())
+  
+  // Relations
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    String
+  
+  // Access control policies
+  @@allow('read', true) // Anyone can read comments
+  @@allow('create', true) // Anyone can create comments
+  @@allow('update', false) // No one can update comments
+  @@allow('delete', false) // No one can delete comments
+  
+  @@map("comments")
+} 
