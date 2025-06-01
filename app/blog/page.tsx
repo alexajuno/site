@@ -3,13 +3,11 @@
 import { useState, useEffect, useCallback } from "react";
 import { PostListWrapper } from "@/components/post-list-wrapper";
 import { SearchInput } from "@/components/search-input";
-import { BlogSidebar } from "@/components/blog-sidebar";
 import { BlogPagination } from "@/components/blog-pagination";
 import { getPostsAction } from "@/lib/actions";
 import { Post } from "@/lib/types";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { Filter } from "lucide-react";
+import { useBlog } from "@/components/blog-context";
 
 interface BlogPageProps {
   searchParams: Promise<{
@@ -23,11 +21,11 @@ interface BlogPageProps {
 const POSTS_PER_PAGE = 6;
 
 export default function BlogPage({ searchParams }: BlogPageProps) {
+  const { selectedTags, setSelectedTags } = useBlog();
   const [allPosts, setAllPosts] = useState<Post[]>([]);
   const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -45,15 +43,20 @@ export default function BlogPage({ searchParams }: BlogPageProps) {
         const params = await searchParams;
         const urlSearchQuery = params.search || "";
         const urlCategory = params.category || "all";
-        const urlTags = params.tags
-          ? params.tags.split(",").filter(Boolean)
-          : [];
+        const urlTags = params.tags || "";
         const urlPage = parseInt(params.page || "1", 10);
 
         setSearchQuery(urlSearchQuery);
         setSelectedCategory(urlCategory);
-        setSelectedTags(urlTags);
         setCurrentPage(urlPage);
+
+        // Parse and set tags from URL
+        if (urlTags) {
+          const tagsArray = urlTags.split(",").filter(tag => tag.trim());
+          setSelectedTags(tagsArray);
+        } else {
+          setSelectedTags([]);
+        }
 
         // Load all posts initially
         const result = await getPostsAction();
@@ -72,7 +75,35 @@ export default function BlogPage({ searchParams }: BlogPageProps) {
     };
 
     loadData();
-  }, [searchParams]);
+  }, [searchParams, setSelectedTags]);
+
+  // Sync selectedTags changes back to URL
+  useEffect(() => {
+    if (isLoading) return; // Don't update URL during initial load
+    
+    const currentParams = new URLSearchParams(window.location.search);
+    const currentTags = currentParams.get('tags') || '';
+    const newTags = selectedTags.join(',');
+    
+    // Only update URL if tags actually changed
+    if (currentTags !== newTags) {
+      const params = new URLSearchParams(window.location.search);
+      
+      if (selectedTags.length > 0) {
+        params.set('tags', newTags);
+      } else {
+        params.delete('tags');
+      }
+      
+      // Reset page to 1 when tags change
+      params.delete('page');
+      setCurrentPage(1);
+      
+      // Update URL without causing a page reload
+      const newUrl = `/blog?${params.toString()}`;
+      window.history.replaceState(null, '', newUrl);
+    }
+  }, [selectedTags, isLoading]);
 
   // Filter posts whenever filters change
   useEffect(() => {
@@ -121,10 +152,6 @@ export default function BlogPage({ searchParams }: BlogPageProps) {
     setSearchQuery(query);
   }, []);
 
-  const handleTagsChange = useCallback((tags: string[]) => {
-    setSelectedTags(tags);
-  }, []);
-
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     // Scroll to top when page changes
@@ -133,7 +160,7 @@ export default function BlogPage({ searchParams }: BlogPageProps) {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <div className="container mx-auto px-4 py-8 max-w-5xl">
         <div className="space-y-8">
           <div className="animate-pulse">
             <div className="h-8 bg-muted rounded w-1/3 mb-2 mx-auto"></div>
@@ -152,84 +179,65 @@ export default function BlogPage({ searchParams }: BlogPageProps) {
   }
 
   return (
-    <SidebarProvider defaultOpen={false}>
-      <SidebarTrigger>
-        <Filter className="h-4 w-4" />
-        <span>Filters & Tags</span>
-      </SidebarTrigger>
-      <div className="flex min-h-screen w-full">
-        {/* Sidebar */}
-        <BlogSidebar
-          selectedTags={selectedTags}
-          onTagsChange={handleTagsChange}
-        />
-
-        {/* Main Content */}
-        <div className="flex-1 flex flex-col">
-          <div className="container mx-auto px-4 py-8 max-w-5xl">
-            <div className="space-y-8">
-              {/* Header */}
-              <div className="text-center space-y-4">
-                <h1 className="text-4xl font-bold tracking-tight">Blog</h1>
-
-                {/* Filter Toggle Button */}
-              </div>
-
-              {/* Search Input */}
-              <div className="flex justify-center">
-                <SearchInput
-                  placeholder="Search posts..."
-                  value={searchQuery}
-                  onSearch={handleSearch}
-                  className="w-full max-w-md"
-                />
-              </div>
-
-              {/* Category Tabs */}
-              <Tabs
-                value={selectedCategory}
-                onValueChange={handleCategoryChange}
-              >
-                <div className="flex justify-center">
-                  <TabsList className="grid w-full max-w-md grid-cols-3">
-                    <TabsTrigger value="all">All</TabsTrigger>
-                    <TabsTrigger value="tech">Tech</TabsTrigger>
-                    <TabsTrigger value="life">Life</TabsTrigger>
-                  </TabsList>
-                </div>
-
-                {/* Posts Content */}
-                <div className="min-h-[600px] mt-8">
-                  <TabsContent value={selectedCategory} className="space-y-8">
-                    {currentPosts.length > 0 ? (
-                      <>
-                        <PostListWrapper posts={currentPosts} />
-
-                        {/* Pagination */}
-                        <BlogPagination
-                          currentPage={currentPage}
-                          totalPages={totalPages}
-                          onPageChange={handlePageChange}
-                          className="mt-12"
-                        />
-                      </>
-                    ) : (
-                      <div className="text-center py-12">
-                        <p className="text-lg text-muted-foreground">
-                          No posts found matching your criteria.
-                        </p>
-                        <p className="text-sm text-muted-foreground mt-2">
-                          Try adjusting your search or filters.
-                        </p>
-                      </div>
-                    )}
-                  </TabsContent>
-                </div>
-              </Tabs>
-            </div>
-          </div>
+    <div className="container mx-auto px-4 py-8 max-w-5xl">
+      <div className="space-y-8">
+        {/* Header */}
+        <div className="text-center space-y-4">
+          <h1 className="text-4xl font-bold tracking-tight">Blog</h1>
         </div>
+
+        {/* Search Input */}
+        <div className="flex justify-center">
+          <SearchInput
+            placeholder="Search posts..."
+            value={searchQuery}
+            onSearch={handleSearch}
+            className="w-full max-w-md"
+          />
+        </div>
+
+        {/* Category Tabs */}
+        <Tabs
+          value={selectedCategory}
+          onValueChange={handleCategoryChange}
+        >
+          <div className="flex justify-center">
+            <TabsList className="grid w-full max-w-md grid-cols-3">
+              <TabsTrigger value="all">All</TabsTrigger>
+              <TabsTrigger value="tech">Tech</TabsTrigger>
+              <TabsTrigger value="life">Life</TabsTrigger>
+            </TabsList>
+          </div>
+
+          {/* Posts Content */}
+          <div className="min-h-[600px] mt-8">
+            <TabsContent value={selectedCategory} className="space-y-8">
+              {currentPosts.length > 0 ? (
+                <>
+                  <PostListWrapper posts={currentPosts} />
+
+                  {/* Pagination */}
+                  <BlogPagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                    className="mt-12"
+                  />
+                </>
+              ) : (
+                <div className="text-center py-12">
+                  <p className="text-lg text-muted-foreground">
+                    No posts found matching your criteria.
+                  </p>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Try adjusting your search or filters.
+                  </p>
+                </div>
+              )}
+            </TabsContent>
+          </div>
+        </Tabs>
       </div>
-    </SidebarProvider>
+    </div>
   );
 }

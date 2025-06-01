@@ -1,12 +1,13 @@
 "use client"
 
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Calendar, MessageCircle } from "lucide-react"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Post } from "@/lib/types"
+import { useBlog } from "@/components/blog-context"
 
 interface PostCardProps {
   post: Post
@@ -14,6 +15,8 @@ interface PostCardProps {
 
 export function PostCard({ post }: PostCardProps) {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const { selectedTags, setSelectedTags } = useBlog()
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
@@ -47,9 +50,38 @@ export function PostCard({ post }: PostCardProps) {
     e.preventDefault()
     e.stopPropagation()
     
-    // Navigate to blog page with tag filter
-    const params = new URLSearchParams()
-    params.set('tags', tag)
+    // If we're not on the blog page, navigate to blog page with this tag
+    if (!window.location.pathname.startsWith('/blog')) {
+      const params = new URLSearchParams()
+      params.set('tags', tag)
+      router.push(`/blog?${params.toString()}`)
+      return
+    }
+
+    // If we're on the blog page, update the context and URL
+    let newTags: string[]
+    if (selectedTags.includes(tag)) {
+      // Remove tag if already selected
+      newTags = selectedTags.filter(t => t !== tag)
+    } else {
+      // Add tag if not selected
+      newTags = [...selectedTags, tag]
+    }
+
+    // Update the context
+    setSelectedTags(newTags)
+
+    // Update URL parameters
+    const params = new URLSearchParams(searchParams.toString())
+    if (newTags.length > 0) {
+      params.set('tags', newTags.join(','))
+    } else {
+      params.delete('tags')
+    }
+    
+    // Reset page to 1 when tags change
+    params.delete('page')
+    
     router.push(`/blog?${params.toString()}`)
   }
 
@@ -86,8 +118,12 @@ export function PostCard({ post }: PostCardProps) {
           {post.tags.map((tag: string) => (
             <Badge 
               key={tag} 
-              variant="outline" 
-              className="hover:bg-primary hover:text-primary-foreground cursor-pointer transition-colors"
+              variant={selectedTags.includes(tag) ? "default" : "outline"}
+              className={`cursor-pointer transition-colors ${
+                selectedTags.includes(tag)
+                  ? "bg-primary text-primary-foreground"
+                  : "hover:bg-primary hover:text-primary-foreground"
+              }`}
               onClick={(e) => handleTagClick(tag, e)}
             >
               {tag}
