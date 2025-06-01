@@ -1,0 +1,2 @@
+- [x] Outdated GitHub, LinkedIn lucide-react icons 
+- [ ] Icon for the website
