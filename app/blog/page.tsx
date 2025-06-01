@@ -44,7 +44,7 @@ export default function BlogPage({ searchParams }: BlogPageProps) {
         const urlSearchQuery = params.search || "";
         const urlCategory = params.category || "all";
         const urlTags = params.tags || "";
-        const urlPage = parseInt(params.page || "1", 10);
+        const urlPage = parseInt(params.page || "1", 10) || 1;
 
         setSearchQuery(urlSearchQuery);
         setSelectedCategory(urlCategory);
