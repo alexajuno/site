@@ -53,7 +53,7 @@ export default function AboutPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <ExternalLink className="h-5 w-5" />
+                <ExternalLink className="h-5 w-5" aria-hidden="true" />
                 Experience
               </CardTitle>
             </CardHeader>
