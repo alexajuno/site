@@ -22,17 +22,15 @@ export function FeaturedContent() {
                 Featured Post
               </div>
               <CardTitle className="text-2xl lg:text-3xl font-bold text-foreground mb-3">
-                Building a Second Brain in the Digital Age
+                Some Retrospective Thoughts on Building JAMC - A Q&A Platform
               </CardTitle>
               <CardDescription className="text-muted-foreground text-base leading-relaxed">
-                Exploring how digital tools can augment our thinking and
-                creativity. A deep dive into personal knowledge management
-                systems and the art of connecting ideas across domains.
+                Looking back at building JAMC, a Q&A platform, and the lessons learned along the way. Reflections on technical decisions, challenges faced, and the future of the project.
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-0">
               <Link
-                href="/blog/building-second-brain"
+                href="/blog/some-retrospective-thoughts-on-my-qa-platform"
                 className="inline-flex items-center text-foreground hover:text-muted-foreground font-medium transition-colors group"
               >
                 Read More
