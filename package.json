@@ -11,7 +11,7 @@
     "start": "next start",
     "lint": "next lint",
     "vercel-build": "zenstack generate && next build && prisma migrate deploy",
-    "sync-posts": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/seed-posts.ts",
+    "sync-posts": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/sync-posts.ts",
     "new-post": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/new-post.ts"
   },
   "dependencies": {

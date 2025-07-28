@@ -1,6 +1,12 @@
 import { PrismaClient } from '@prisma/client'
 import { getAllParsedPosts, type ParsedPost } from '../lib/markdown'
 
+if (!process.env.DATABASE_URL) {
+  console.error('❌ DATABASE_URL environment variable is not set')
+  console.log('💡 Make sure you have a .env file with DATABASE_URL configured')
+  process.exit(1)
+}
+
 const prisma = new PrismaClient()
 
 async function createOrUpdateTag(name: string) {
