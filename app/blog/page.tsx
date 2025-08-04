@@ -210,7 +210,7 @@ export default function BlogPage({ searchParams }: BlogPageProps) {
           </div>
 
           {/* Posts Content */}
-          <div className="min-h-[600px] mt-8">
+          <div className="mt-8">
             <TabsContent value={selectedCategory} className="space-y-8">
               {currentPosts.length > 0 ? (
                 <>
