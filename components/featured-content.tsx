@@ -12,7 +12,7 @@ import { GitHubIcon } from "@/components/icons/github-icon";
 
 export function FeaturedContent() {
   return (
-    <section className="py-16 lg:py-24">
+    <section className="py-2 lg:py-4">
       <div className="container mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
           {/* Featured Blog Post */}

@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 
 export function HeroSection() {
   return (
-    <section className="py-20 lg:py-32">
+    <section className="py-4 lg:py-8">
       <div className="container mx-auto px-4 text-center">
         <h1 className="text-5xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent leading-normal">
           Ideas, Experiments, and Essays
