@@ -3,7 +3,7 @@ slug: some-retrospective-thoughts-on-my-qa-platform
 title: "Some Retrospective Thoughts on Building JAMC - A Q&A Platform"
 date: "2025-06-05T00:50:32+07:00"
 category: "Tech"
-tags: ["Retrospective", "Q&A Platform", "Software Development", "Learning"]
+tags: ["Q&A Platform", "Software Development", "Learning"]
 excerpt: "Looking back at building JAMC, a Q&A platform, and the lessons learned along the way. Reflections on technical decisions, challenges faced, and what I would do differently."
 ---
 
