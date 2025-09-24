@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export function HeroSection() {
   return (
-    <section className="py-4 lg:py-8">
+    <section className="py-4 lg:py-6">
       <div className="container mx-auto px-4 text-center">
         <h1 className="text-5xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent leading-normal">
           Ideas, Experiments, and Essays
