@@ -4,7 +4,7 @@ title: "Rate Limiting and Identifying Users"
 date: "2025-09-24T11:30:00+07:00"
 category: "Tech"
 tags: ["Rate Limiting", "Backend", "Security", "Token"]
-excerpt: "Retrospective of working with rate limiting"
+excerpt: "A practical reflection on implementing rate limiting beyond the textbook algorithms. This post covers not just the mechanics—like IP-based blocking, caching layers, and token verification—but also the harder question of how to reliably identify clients. From secret-signed tokens to device fingerprinting, I share trade-offs and lessons learned while balancing security, performance, and usability"
 ---
 
 # Rate Limiting and Identifying User
@@ -22,6 +22,8 @@ The bigger concern is how to identify clients. For example, take Stripe: they em
 Then comes the question: should the token payload live on the client or server?
 
 If it’s client-side, you could use a JWT or a simpler form like `iss|exp|token`. Each has trade-offs. JWT is standardized and widely supported with libraries across platforms. If you go lighter with a custom format, you might need to reinvent some token signing/verification logic, but it’s usually manageable.
+
+When communicating rate limits to clients, servers typically include headers such as `X-RateLimit-Limit`, `X-RateLimit-Remaining`, and `Retry-After`. One subtle issue I ran into was around CORS. Even if your backend sets those headers, browsers won’t always expose them to client-side JavaScript unless they’re explicitly listed in the `Access-Control-Expose-Headers` response header. It’s easy to miss this detail: without it, the headers exist on the wire, but the client can’t read them. So, when designing rate-limiting responses, it’s worth double-checking that your **CORS** configuration allows clients to see the metadata you intend.
 
 Another idea is device fingerprinting, with open source projects like Fingerprint.js or Thumbmark.js. The hit rate isn’t 100%, and device fingerprinting feels sensitive since it can be blocked by the client (e.g. with adblocker) and is already being deprecated by browsers. It’s not good for tracking user info long-term, so personally I don’t like this approach. But it does work as a way to identify clients in anonymous sessions.
 
