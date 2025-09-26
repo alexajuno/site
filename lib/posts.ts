@@ -1,4 +1,4 @@
-import { Post } from './types'
+import { Post, type Category } from './types'
 
 export async function getAllPosts(): Promise<Post[]> {
   // Only run on server side
@@ -32,7 +32,7 @@ export async function getAllPosts(): Promise<Post[]> {
           title: data.title || '',
           date: data.date || '',
           updated: data.updated,
-          category: data.category || 'Tech',
+          category: (data.category === 'Life' ? 'LIFE' : 'TECH') as Category,
           tags: data.tags || [],
           excerpt: data.excerpt || '',
           content: content,
@@ -79,7 +79,7 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
       title: data.title || '',
       date: data.date || '',
       updated: data.updated,
-      category: data.category || 'Tech',
+      category: (data.category === 'Life' ? 'LIFE' : 'TECH') as Category,
       tags: data.tags || [],
       excerpt: data.excerpt || '',
       content: content,
@@ -88,20 +88,4 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
     console.error('Error reading post:', error)
     return null
   }
-}
-
-export async function getPopularTags(): Promise<{ name: string; count: number }[]> {
-  const posts = await getAllPosts()
-  const tagCounts: Record<string, number> = {}
-
-  posts.forEach((post) => {
-    post.tags.forEach((tag: string) => {
-      tagCounts[tag] = (tagCounts[tag] || 0) + 1
-    })
-  })
-
-  return Object.entries(tagCounts)
-    .map(([name, count]) => ({ name, count }))
-    .sort((a, b) => b.count - a.count)
-    .slice(0, 10)
 } 

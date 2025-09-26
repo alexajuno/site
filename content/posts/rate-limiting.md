@@ -1,7 +1,7 @@
 ---
 slug: rate-limiting
 title: "Rate Limiting and Identifying Users"
-date: "2025-09-24:00:00+07:00"
+date: "2025-09-24T11:30:00+07:00"
 category: "Tech"
 tags: ["Rate Limiting", "Backend", "Security", "Token"]
 excerpt: "Retrospective of working with rate limiting"

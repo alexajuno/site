@@ -1,10 +1,14 @@
+import { $Enums } from "@prisma/client"; 
+
+export type Category = $Enums.Category;
+
 export interface Post {
   id: string;
   slug: string;
   title: string;
   date: string;
   updated?: string;
-  category: "TECH" | "LIFE";
+  category: Category;
   tags: string[];
   excerpt: string;
   content: string;
@@ -21,3 +25,4 @@ export interface Comment {
 export interface PostWithComments extends Post {
   comments: Comment[];
 }
+

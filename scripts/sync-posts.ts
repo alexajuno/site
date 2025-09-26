@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { getAllParsedPosts, type ParsedPost } from '../lib/markdown'
+import { type Category } from '../lib/types'
 
 if (!process.env.DATABASE_URL) {
   console.error('❌ DATABASE_URL environment variable is not set')
@@ -10,7 +11,7 @@ if (!process.env.DATABASE_URL) {
 const prisma = new PrismaClient()
 
 async function createOrUpdateTag(name: string) {
-  const slug = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+  const slug = convertNameToSlug(name)
   
   return await prisma.tag.upsert({
     where: { slug },
@@ -22,24 +23,24 @@ async function createOrUpdateTag(name: string) {
   })
 }
 
+function convertNameToSlug(name: string) {
+  return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+}
+
 async function syncPost(parsedPost: ParsedPost) {
   const { frontmatter, htmlContent } = parsedPost
   
-  console.log(`📝 Syncing post: ${frontmatter.title}`)
-  
-  // Create or update tags first
   const tagRecords = await Promise.all(
     frontmatter.tags.map(tagName => createOrUpdateTag(tagName))
   )
   
-  // Create or update the post
   const post = await prisma.post.upsert({
     where: { slug: frontmatter.slug },
     update: {
       title: frontmatter.title,
       content: htmlContent,
       excerpt: frontmatter.excerpt,
-      category: frontmatter.category as 'TECH' | 'LIFE',
+      category: frontmatter.category as Category,
       tags: frontmatter.tags, // Keep backward compatibility
       published: true,
       updatedAt: frontmatter.updated ? new Date(frontmatter.updated) : new Date(),
@@ -49,7 +50,7 @@ async function syncPost(parsedPost: ParsedPost) {
       title: frontmatter.title,
       content: htmlContent,
       excerpt: frontmatter.excerpt,
-      category: frontmatter.category as 'TECH' | 'LIFE',
+      category: frontmatter.category as Category,
       tags: frontmatter.tags, // Keep backward compatibility
       published: true,
       createdAt: new Date(frontmatter.date),
