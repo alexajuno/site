@@ -3,9 +3,12 @@ import '../styles/global.css';
 
 interface Props {
 	title?: string;
+	description?: string;
+	/** Widen the container for multi-column pages like the homepage. */
+	wide?: boolean;
 }
 
-const { title = 'Astro Basics' } = Astro.props;
+const { title = 'alexajuno', description, wide = false } = Astro.props;
 ---
 
 <!doctype html>
@@ -17,17 +20,16 @@ const { title = 'Astro Basics' } = Astro.props;
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
+		{description && <meta name="description" content={description} />}
 	</head>
 	<body>
-		<slot />
+		<div class:list={['mx-auto px-6 py-16', wide ? 'max-w-5xl' : 'max-w-2xl']}>
+			<header class="mb-12">
+				<a href="/" class="font-medium underline-offset-4 hover:underline">alexajuno</a>
+			</header>
+			<main>
+				<slot />
+			</main>
+		</div>
 	</body>
 </html>
-
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
