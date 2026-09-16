@@ -3,8 +3,6 @@ title: "Rate Limiting and Identifying Users"
 pubDate: 2025-09-24 11:30:00 +0700
 ---
 
-# Rate Limiting and Identifying Users
-
 Recently I had a chance to work with the topic of rate limiting/throttling, and I want to share a bit.
 
 There's already a lot written about rate limiting. You can check the references (I'll update them over time).

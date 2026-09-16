@@ -3,8 +3,6 @@ title: "Reflections on Security in Modern SaaS Products"
 pubDate: 2025-10-24 12:00:00 +0000
 ---
 
-# Reflections on Security in Modern SaaS Products
-
 Recently, I had the chance to look at a real SaaS product from a security perspective. It was a fascinating experience, helping me see both how far modern software has come and how many gaps still remain.
 
 In today's world, data breaches happen far too often. While large enterprises usually have dedicated security teams and protocols, many small and medium-sized businesses still treat cybersecurity as an afterthought. Ironically, that makes them even more attractive targets for attackers.

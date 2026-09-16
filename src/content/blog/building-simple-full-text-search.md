@@ -3,8 +3,6 @@ title: "Building a Simple Full-Text Search Feature"
 pubDate: 2025-07-28 00:10:57 +0700
 ---
 
-# Building a Simple Yet Scalable Full-Text Search Feature
-
 Recently, I built a simple full-text search feature for an app, and I thought it might be fun to share some of the challenges, decisions, and insights along the way.
 
 The first major decision was choosing the right search engine. There were several good options: Elasticsearch, Typesense, Algolia, and MeiliSearch. Given the simplicity of our initial needs, our desire for self-hosting, and the expectation of future scalability and additional features, Typesense emerged as the clear winner.
