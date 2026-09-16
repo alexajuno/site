@@ -1,0 +1,28 @@
+---
+import { createElement } from 'react';
+import Layout from '../layouts/Layout.astro';
+import Prompt from '@/components/Prompt.astro';
+import { Button } from '@/components/ui/button';
+---
+
+<Layout title="404" description="That page does not exist.">
+	<section class="py-10">
+		<Prompt as="h1" command={`cat ${Astro.url.pathname}`} label="Page not found" />
+		<p class="mt-4 text-destructive">
+			cat: {Astro.url.pathname}: No such file or directory
+		</p>
+		<p class="mt-6 max-w-prose text-muted-foreground">
+			The page you asked for isn't here. It may have moved, or it may never have existed.
+		</p>
+		<div class="mt-8 -ml-2.5 flex flex-wrap gap-2">
+			<Button variant="ghost" size="sm" render={createElement('a', { href: '/' })}>
+				<span class="text-muted-foreground/70" aria-hidden="true">$</span>
+				cd ~
+			</Button>
+			<Button variant="ghost" size="sm" render={createElement('a', { href: '/blog' })}>
+				<span class="text-muted-foreground/70" aria-hidden="true">$</span>
+				ls ~/writing
+			</Button>
+		</div>
+	</section>
+</Layout>
