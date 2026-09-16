@@ -13,7 +13,7 @@ const postsByYear = posts.reduce<Map<number, Post[]>>((years, post) => {
 }, new Map());
 ---
 
-<Layout wide title="Blog" description="Writing by alexajuno on software, systems and everything else.">
+<Layout title="Blog" description="Writing by alexajuno on software, systems and everything else.">
 	<header>
 		<Prompt as="h1" command="ls -la ~/blog" label="Blog" />
 		<p class="mt-4 text-sm text-muted-foreground">

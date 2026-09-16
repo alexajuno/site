@@ -130,6 +130,9 @@
   html {
     @apply font-mono;
     -webkit-text-size-adjust: 100%;
+    /* Reserve the scrollbar track always, so a short page like 404 does not
+     * sit a scrollbar-width to the right of a long one. */
+    scrollbar-gutter: stable;
     }
   body {
     @apply bg-background text-foreground antialiased;
@@ -156,7 +159,10 @@
  * echo both markdown source and a shell comment.
  */
 .prose-terminal {
-  @apply prose prose-neutral dark:prose-invert max-w-none;
+  @apply prose prose-neutral dark:prose-invert;
+  /* The shell is one width on every route, so the measure is capped here rather
+   * than by narrowing the container and shifting the header with it. */
+  max-width: 68ch;
   --tw-prose-body: var(--foreground);
   --tw-prose-headings: var(--foreground);
   --tw-prose-bold: var(--foreground);

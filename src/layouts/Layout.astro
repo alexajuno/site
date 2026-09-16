@@ -5,15 +5,9 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 interface Props {
 	title?: string;
 	description?: string;
-	/** Widen the container for listing pages; posts stay narrow for readability. */
-	wide?: boolean;
 }
 
-const {
-	title = 'alexajuno',
-	description = "giao's little digital garden",
-	wide = false,
-} = Astro.props;
+const { title = 'alexajuno', description = "giao's little digital garden" } = Astro.props;
 
 const siteTitle = 'alexajuno';
 const pageTitle = title === siteTitle ? siteTitle : `${title} — ${siteTitle}`;
@@ -22,7 +16,6 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
 const path = Astro.url.pathname;
 const nav = [
 	{ label: 'blog', href: '/blog', match: (p: string) => p.startsWith('/blog') },
-	{ label: 'github', href: 'https://github.com/alexajuno', match: () => false },
 ];
 
 const year = new Date().getFullYear();
@@ -59,12 +52,7 @@ const year = new Date().getFullYear();
 		</script>
 	</head>
 	<body class="min-h-svh">
-		<div
-			class:list={[
-				'mx-auto flex min-h-svh flex-col px-5 sm:px-8',
-				wide ? 'max-w-3xl' : 'max-w-2xl',
-			]}
-		>
+		<div class="mx-auto flex min-h-svh max-w-3xl flex-col px-5 sm:px-8">
 			<header
 				class="flex items-center justify-between gap-4 border-b py-5 text-sm"
 			>
