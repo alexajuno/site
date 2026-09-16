@@ -1,11 +1,54 @@
 ---
-import Welcome from '../components/Welcome.astro';
+import { createElement } from 'react';
+import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
+import { Button } from '@/components/ui/button';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const recentPosts = (await getCollection('blog'))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 5);
+
+function formatDate(date: Date) {
+	return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+const column = 'border-t pt-10 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-10';
+const textLink = 'underline-offset-4 hover:underline';
 ---
 
-<Layout>
-	<Welcome />
+<Layout wide title="alexajuno" description="giao's little digital garden">
+	<div class="grid grid-cols-1 gap-10 lg:grid-cols-3 lg:gap-0">
+		<section>
+			<h1>About</h1>
+			<p class="mt-4 leading-relaxed text-muted-foreground">
+				hi, i'm a software developer. i spend most of my time with the computer and let the
+				curiosity leads.
+			</p>
+			<div class="mt-4 flex gap-4 text-sm text-muted-foreground">
+				<a href="https://github.com/alexajuno" class={textLink}>GitHub</a>
+				<a href="https://x.com/giolynx104" class={textLink}>X</a>
+				<a href="mailto:giolynx104@gmail.com" class={textLink}>Email</a>
+			</div>
+		</section>
+
+		<section class={column}>
+			<h2>Writing</h2>
+			<ul class="mt-4 space-y-4">
+				{recentPosts.map((post) => (
+					<li>
+						<a href={`/blog/${post.id}`} class={textLink}>{post.data.title}</a>
+						<time
+							datetime={post.data.pubDate.toISOString()}
+							class="mt-0.5 block text-sm text-muted-foreground"
+						>
+							{formatDate(post.data.pubDate)}
+						</time>
+					</li>
+				))}
+			</ul>
+			<div class="mt-6">
+				<Button variant="link" render={createElement('a', { href: '/blog' })}>All posts &rarr;</Button>
+			</div>
+		</section>
+	</div>
 </Layout>
