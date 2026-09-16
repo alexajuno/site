@@ -1,6 +1,8 @@
 ---
+import { createElement } from 'react';
 import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import { Button } from '@/components/ui/button';
 
 export async function getStaticPaths() {
 	const posts = await getCollection('blog');
@@ -15,6 +17,7 @@ const { Content } = await render(post);
 ---
 
 <Layout title={post.data.title}>
+	<Button variant="ghost" render={createElement('a', { href: '/blog' })}>&larr; Back to blog</Button>
 	<article>
 		<h1>{post.data.title}</h1>
 		<time datetime={post.data.pubDate.toISOString()}>
