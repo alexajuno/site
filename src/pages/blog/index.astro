@@ -10,9 +10,9 @@ const posts = (await getCollection('blog')).sort(
 
 <Layout title="Blog">
 	<h1>Blog</h1>
-	<div>
+	<div class="mt-8 space-y-4">
 		{posts.map((post) => (
-			<a href={`/blog/${post.id}`}>
+			<a href={`/blog/${post.id}`} class="block">
 				<Card>
 					<CardHeader>
 						<CardTitle>{post.data.title}</CardTitle>

@@ -18,11 +18,16 @@ const { Content } = await render(post);
 
 <Layout title={post.data.title}>
 	<Button variant="ghost" render={createElement('a', { href: '/blog' })}>&larr; Back to blog</Button>
-	<article>
+	<article class="mt-8">
 		<h1>{post.data.title}</h1>
-		<time datetime={post.data.pubDate.toISOString()}>
+		<time
+			datetime={post.data.pubDate.toISOString()}
+			class="mt-2 block text-sm text-muted-foreground"
+		>
 			{post.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
 		</time>
-		<Content />
+		<div class="prose prose-neutral dark:prose-invert mt-8 max-w-none">
+			<Content />
+		</div>
 	</article>
 </Layout>
