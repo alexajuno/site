@@ -15,9 +15,9 @@ const postsByYear = posts.reduce<Map<number, Post[]>>((years, post) => {
 
 <Layout wide title="Blog" description="Writing by alexajuno on software, systems and everything else.">
 	<header>
-		<Prompt as="h1" command="ls -la ~/writing" label="Blog" />
+		<Prompt as="h1" command="ls -la ~/blog" label="Blog" />
 		<p class="mt-4 text-sm text-muted-foreground">
-			{posts.length} posts, newest first.
+			{posts.length} posts
 		</p>
 	</header>
 

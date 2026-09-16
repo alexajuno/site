@@ -38,7 +38,7 @@ const links = [
 	</section>
 
 	<section class="mt-14">
-		<Prompt command="ls ~/writing" label="Writing" />
+		<Prompt command="ls ~/blog" label="Blog" />
 		<div class="mt-4 flex flex-col">
 			{recentPosts.map((post) => <PostRow post={post} />)}
 		</div>
@@ -48,7 +48,7 @@ const links = [
 		>
 			<span class="text-muted-foreground/70" aria-hidden="true">$</span>
 			<span class="underline decoration-border underline-offset-4 group-hover:decoration-primary"
-				>cd ~/writing</span
+				>cd ~/blog</span
 			>
 			<span class="text-xs">({posts.length} posts)</span>
 		</a>
