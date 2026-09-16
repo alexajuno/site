@@ -6,6 +6,20 @@ import react from '@astrojs/react';
 
 // https://astro.build/config
 export default defineConfig({
+  // TODO: replace with the real deploy URL. Canonical links and the RSS feed
+  // build absolute URLs from this, so a wrong value ships wrong links.
+  site: 'https://alexajuno.com',
+
+  markdown: {
+    // Emit both themes as CSS variables rather than baking one in as inline
+    // styles, so code blocks follow the site's dark/light toggle. global.css
+    // picks which variable applies.
+    shikiConfig: {
+      themes: { light: 'vitesse-light', dark: 'vitesse-dark' },
+      defaultColor: false
+    }
+  },
+
   vite: {
     plugins: [tailwindcss()]
   },

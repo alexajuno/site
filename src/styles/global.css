@@ -2,14 +2,16 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
 
 @plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-    --font-heading: var(--font-sans);
-    --font-sans: 'Geist Variable', sans-serif;
+    --font-mono: 'Geist Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --font-sans: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
+    --font-heading: var(--font-mono);
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -50,92 +52,213 @@
     --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* Light terminal: warm off-white paper, ink text, a green that survives white. */
 :root {
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
+    --background: oklch(0.985 0.003 120);
+    --foreground: oklch(0.24 0.012 250);
     --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
+    --card-foreground: oklch(0.24 0.012 250);
     --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
-    --radius: 0.625rem;
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.708 0 0);
+    --popover-foreground: oklch(0.24 0.012 250);
+    --primary: oklch(0.52 0.13 152);
+    --primary-foreground: oklch(0.99 0.005 120);
+    --secondary: oklch(0.95 0.006 250);
+    --secondary-foreground: oklch(0.24 0.012 250);
+    --muted: oklch(0.95 0.006 250);
+    --muted-foreground: oklch(0.52 0.012 250);
+    --accent: oklch(0.93 0.03 152);
+    --accent-foreground: oklch(0.32 0.09 152);
+    --destructive: oklch(0.55 0.21 27);
+    --border: oklch(0.89 0.008 250);
+    --input: oklch(0.89 0.008 250);
+    --ring: oklch(0.52 0.13 152);
+    --chart-1: oklch(0.52 0.13 152);
+    --chart-2: oklch(0.6 0.1 200);
+    --chart-3: oklch(0.55 0.12 60);
+    --chart-4: oklch(0.45 0.1 300);
+    --chart-5: oklch(0.4 0.02 250);
+    --radius: 0.25rem;
+    --sidebar: oklch(0.97 0.004 250);
+    --sidebar-foreground: oklch(0.24 0.012 250);
+    --sidebar-primary: oklch(0.52 0.13 152);
+    --sidebar-primary-foreground: oklch(0.99 0.005 120);
+    --sidebar-accent: oklch(0.93 0.03 152);
+    --sidebar-accent-foreground: oklch(0.32 0.09 152);
+    --sidebar-border: oklch(0.89 0.008 250);
+    --sidebar-ring: oklch(0.52 0.13 152);
 }
 
+/* Dark terminal: the default. Cool near-black with a phosphor green. */
 .dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.205 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.922 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(1 0 0 / 10%);
-    --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.556 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.556 0 0);
+    --background: oklch(0.175 0.012 255);
+    --foreground: oklch(0.91 0.01 250);
+    --card: oklch(0.215 0.014 255);
+    --card-foreground: oklch(0.91 0.01 250);
+    --popover: oklch(0.215 0.014 255);
+    --popover-foreground: oklch(0.91 0.01 250);
+    --primary: oklch(0.8 0.16 155);
+    --primary-foreground: oklch(0.19 0.03 155);
+    --secondary: oklch(0.26 0.014 255);
+    --secondary-foreground: oklch(0.91 0.01 250);
+    --muted: oklch(0.26 0.014 255);
+    --muted-foreground: oklch(0.65 0.014 250);
+    --accent: oklch(0.29 0.03 155);
+    --accent-foreground: oklch(0.85 0.14 155);
+    --destructive: oklch(0.7 0.19 22);
+    --border: oklch(1 0 0 / 12%);
+    --input: oklch(1 0 0 / 16%);
+    --ring: oklch(0.8 0.16 155);
+    --chart-1: oklch(0.8 0.16 155);
+    --chart-2: oklch(0.7 0.12 200);
+    --chart-3: oklch(0.75 0.13 70);
+    --chart-4: oklch(0.65 0.12 300);
+    --chart-5: oklch(0.6 0.02 250);
+    --sidebar: oklch(0.215 0.014 255);
+    --sidebar-foreground: oklch(0.91 0.01 250);
+    --sidebar-primary: oklch(0.8 0.16 155);
+    --sidebar-primary-foreground: oklch(0.19 0.03 155);
+    --sidebar-accent: oklch(0.29 0.03 155);
+    --sidebar-accent-foreground: oklch(0.85 0.14 155);
+    --sidebar-border: oklch(1 0 0 / 12%);
+    --sidebar-ring: oklch(0.8 0.16 155);
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
     }
-  body {
-    @apply bg-background text-foreground;
-    }
   html {
-    @apply font-sans;
+    @apply font-mono;
+    -webkit-text-size-adjust: 100%;
+    }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-size: 0.9375rem;
+    line-height: 1.7;
     }
   h1 {
-    @apply text-2xl font-semibold tracking-tight;
-    }
-  h2 {
     @apply text-xl font-semibold tracking-tight;
     }
-  h3 {
-    @apply text-lg font-medium;
+  h2 {
+    @apply text-lg font-semibold tracking-tight;
     }
+  h3 {
+    @apply text-base font-semibold;
+    }
+  ::selection {
+    @apply bg-primary text-primary-foreground;
+    }
+}
+
+/*
+ * Long-form post body. Mono at full size reads heavy, so the measure is kept
+ * narrow and the leading loose. Headings stay flush-left with a `#` marker to
+ * echo both markdown source and a shell comment.
+ */
+.prose-terminal {
+  @apply prose prose-neutral dark:prose-invert max-w-none;
+  --tw-prose-body: var(--foreground);
+  --tw-prose-headings: var(--foreground);
+  --tw-prose-bold: var(--foreground);
+  --tw-prose-links: var(--primary);
+  --tw-prose-quotes: var(--muted-foreground);
+  --tw-prose-code: var(--foreground);
+  --tw-prose-counters: var(--muted-foreground);
+  --tw-prose-bullets: var(--primary);
+  --tw-prose-hr: var(--border);
+  --tw-prose-quote-borders: var(--primary);
+  font-size: 0.9375rem;
+  line-height: 1.85;
+}
+
+.prose-terminal :is(h2, h3, h4) {
+  @apply scroll-mt-24 tracking-tight;
+}
+
+.prose-terminal :is(h2, h3)::before {
+  @apply mr-2 font-normal text-primary/60 select-none;
+}
+
+.prose-terminal h2::before {
+  content: '##';
+}
+
+.prose-terminal h3::before {
+  content: '###';
+}
+
+.prose-terminal a {
+  @apply font-normal underline decoration-primary/40 underline-offset-4 transition-colors;
+  text-decoration-thickness: 1px;
+}
+
+.prose-terminal a:hover {
+  @apply decoration-primary;
+}
+
+.prose-terminal :not(pre) > code {
+  @apply rounded-sm bg-muted px-1.5 py-0.5 text-[0.85em] font-medium;
+}
+
+.prose-terminal :not(pre) > code::before,
+.prose-terminal :not(pre) > code::after {
+  content: none;
+}
+
+.prose-terminal pre {
+  @apply rounded-md border text-[0.85em] leading-relaxed;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.prose-terminal pre::-webkit-scrollbar {
+  height: 0.5rem;
+}
+
+.prose-terminal pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.prose-terminal pre::-webkit-scrollbar-thumb {
+  @apply rounded-full bg-muted-foreground/30;
+}
+
+/*
+ * Shiki is configured with `defaultColor: false`, so it ships both themes as
+ * custom properties and leaves the choice to CSS. Backgrounds are only set on
+ * the block itself; the spans inside carry colour alone.
+ */
+.prose-terminal .astro-code {
+  background-color: var(--shiki-light-bg);
+}
+
+.prose-terminal .astro-code,
+.prose-terminal .astro-code span {
+  color: var(--shiki-light);
+}
+
+.dark .prose-terminal .astro-code {
+  background-color: var(--shiki-dark-bg);
+}
+
+.dark .prose-terminal .astro-code,
+.dark .prose-terminal .astro-code span {
+  color: var(--shiki-dark);
+}
+
+.prose-terminal blockquote {
+  @apply border-l-2 pl-5 font-normal not-italic;
+}
+
+.prose-terminal blockquote p::before,
+.prose-terminal blockquote p::after {
+  content: none;
+}
+
+.prose-terminal :is(ul, ol) > li::marker {
+  @apply text-primary/70;
+}
+
+.prose-terminal img {
+  @apply rounded-md border;
 }

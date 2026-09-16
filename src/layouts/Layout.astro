@@ -1,42 +1,127 @@
 ---
 import '../styles/global.css';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 interface Props {
 	title?: string;
 	description?: string;
-	/** Widen the container for multi-column pages like the homepage. */
+	/** Widen the container for listing pages; posts stay narrow for readability. */
 	wide?: boolean;
 }
 
-const { title = 'alexajuno', description, wide = false } = Astro.props;
+const {
+	title = 'alexajuno',
+	description = "giao's little digital garden",
+	wide = false,
+} = Astro.props;
+
+const siteTitle = 'alexajuno';
+const pageTitle = title === siteTitle ? siteTitle : `${title} — ${siteTitle}`;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
+
+const path = Astro.url.pathname;
+const nav = [
+	{ label: 'blog', href: '/blog', match: (p: string) => p.startsWith('/blog') },
+	{ label: 'github', href: 'https://github.com/alexajuno', match: () => false },
+];
+
+const year = new Date().getFullYear();
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark">
 	<head>
 		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
+		<link rel="canonical" href={canonical} />
+		<link rel="alternate" type="application/rss+xml" title={siteTitle} href="/rss.xml" />
 		<meta name="generator" content={Astro.generator} />
-		<title>{title}</title>
-		{description && <meta name="description" content={description} />}
+		<title>{pageTitle}</title>
+		<meta name="description" content={description} />
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content={pageTitle} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={canonical} />
+		<meta name="twitter:card" content="summary" />
+		<meta name="theme-color" content="#14161c" />
+		{/*
+		 * Dark is the default regardless of the OS setting, and light is an opt-in
+		 * the toggle stores. Runs inline before first paint so an opted-in visitor
+		 * never sees a flash of the dark theme.
+		 */}
+		<script is:inline>
+			document.documentElement.classList.toggle(
+				'dark',
+				localStorage.getItem('theme') !== 'light',
+			);
+		</script>
 	</head>
-	<body>
-		<div class:list={['mx-auto px-6 py-16', wide ? 'max-w-4xl' : 'max-w-2xl']}>
-			<header class="mb-12 flex items-baseline justify-between border-b pb-4">
-				<a href="/" class="font-medium underline-offset-4 hover:underline">alexajuno</a>
-				<nav class="flex gap-5 text-sm text-muted-foreground">
-					<a href="/blog" class="underline-offset-4 hover:underline">Blog</a>
-					<a
-						href="https://github.com/alexajuno"
-						class="underline-offset-4 hover:underline">GitHub</a
+	<body class="min-h-svh">
+		<div
+			class:list={[
+				'mx-auto flex min-h-svh flex-col px-5 sm:px-8',
+				wide ? 'max-w-3xl' : 'max-w-2xl',
+			]}
+		>
+			<header
+				class="flex items-center justify-between gap-4 border-b py-5 text-sm"
+			>
+				<a
+					href="/"
+					class="group inline-flex items-baseline gap-1.5 font-medium tracking-tight transition-colors hover:text-primary"
+				>
+					<span aria-hidden="true">
+						<span class="text-primary">~/</span>{siteTitle}
+					</span>
+					<span
+						class="text-muted-foreground/70 transition-colors group-hover:text-primary"
+						aria-hidden="true">$</span
 					>
+					<span class="sr-only">{siteTitle}, home</span>
+				</a>
+				<nav class="flex items-center gap-1 text-sm">
+					{
+						nav.map(({ label, href, match }) => (
+							<a
+								href={href}
+								aria-current={match(path) ? 'page' : undefined}
+								class="rounded-sm px-1.5 py-1 text-muted-foreground transition-colors hover:text-foreground aria-[current=page]:text-primary"
+							>
+								<span class="text-muted-foreground/50" aria-hidden="true">
+									[
+								</span>
+								{label}
+								<span class="text-muted-foreground/50" aria-hidden="true">
+									]
+								</span>
+							</a>
+						))
+					}
+					<ThemeToggle client:load />
 				</nav>
 			</header>
-			<main>
+
+			<main class="flex-1 py-12 sm:py-16">
 				<slot />
 			</main>
+
+			<footer
+				class="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-t py-6 text-xs text-muted-foreground"
+			>
+				<p>© {year} {siteTitle}</p>
+				<p class="flex items-center gap-4">
+					<a href="/rss.xml" class="transition-colors hover:text-foreground">rss</a>
+					<a
+						href="https://github.com/alexajuno"
+						class="transition-colors hover:text-foreground">github</a
+					>
+					<a href="mailto:giolynx104@gmail.com" class="transition-colors hover:text-foreground"
+						>email</a
+					>
+				</p>
+			</footer>
 		</div>
 	</body>
 </html>

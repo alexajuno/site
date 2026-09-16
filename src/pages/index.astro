@@ -1,54 +1,56 @@
 ---
-import { createElement } from 'react';
-import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
-import { Button } from '@/components/ui/button';
+import PostRow from '@/components/PostRow.astro';
+import Prompt from '@/components/Prompt.astro';
+import { getSortedPosts } from '@/lib/posts';
 
-const recentPosts = (await getCollection('blog'))
-	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-	.slice(0, 5);
+const posts = await getSortedPosts();
+const recentPosts = posts.slice(0, 6);
 
-function formatDate(date: Date) {
-	return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-}
-
-const column = 'border-t pt-10 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-10';
-const textLink = 'underline-offset-4 hover:underline';
+const links = [
+	{ label: 'github', href: 'https://github.com/alexajuno' },
+	{ label: 'x', href: 'https://x.com/giolynx104' },
+	{ label: 'email', href: 'mailto:giolynx104@gmail.com' },
+];
 ---
 
 <Layout wide title="alexajuno" description="giao's little digital garden">
-	<div class="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-0">
-		<section>
-			<h1>About</h1>
-			<p class="mt-4 leading-relaxed text-muted-foreground">
-				hi, i'm a software developer. i spend most of my time with the computer and let the
-				curiosity leads.
-			</p>
-			<div class="mt-4 flex gap-4 text-sm text-muted-foreground">
-				<a href="https://github.com/alexajuno" class={textLink}>GitHub</a>
-				<a href="https://x.com/giolynx104" class={textLink}>X</a>
-				<a href="mailto:giolynx104@gmail.com" class={textLink}>Email</a>
-			</div>
-		</section>
-
-		<section class={column}>
-			<h2>Writing</h2>
-			<ul class="mt-4 space-y-4">
-				{recentPosts.map((post) => (
+	<section>
+		<Prompt as="h1" command="whoami" label="About" />
+		<p class="mt-4 max-w-prose text-pretty">
+			hi, i'm a software developer. i spend most of my time with the computer and let the
+			curiosity lead.
+		</p>
+		<ul class="mt-5 flex flex-wrap gap-x-5 gap-y-1 text-sm">
+			{
+				links.map(({ label, href }) => (
 					<li>
-						<a href={`/blog/${post.id}`} class={textLink}>{post.data.title}</a>
-						<time
-							datetime={post.data.pubDate.toISOString()}
-							class="mt-0.5 block text-sm text-muted-foreground"
+						<a
+							href={href}
+							class="text-muted-foreground underline decoration-border underline-offset-4 transition-colors hover:text-primary hover:decoration-primary"
 						>
-							{formatDate(post.data.pubDate)}
-						</time>
+							{label}
+						</a>
 					</li>
-				))}
-			</ul>
-			<div class="mt-6 -ml-2.5">
-				<Button variant="link" render={createElement('a', { href: '/blog' })}>All posts &rarr;</Button>
-			</div>
-		</section>
-	</div>
+				))
+			}
+		</ul>
+	</section>
+
+	<section class="mt-14">
+		<Prompt command="ls ~/writing" label="Writing" />
+		<div class="mt-4 flex flex-col">
+			{recentPosts.map((post) => <PostRow post={post} />)}
+		</div>
+		<a
+			href="/blog"
+			class="group mt-6 -mx-2 inline-flex items-center gap-2 rounded-sm px-2 py-1 text-sm text-muted-foreground transition-colors hover:text-primary"
+		>
+			<span class="text-muted-foreground/70" aria-hidden="true">$</span>
+			<span class="underline decoration-border underline-offset-4 group-hover:decoration-primary"
+				>cd ~/writing</span
+			>
+			<span class="text-xs">({posts.length} posts)</span>
+		</a>
+	</section>
 </Layout>
