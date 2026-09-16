@@ -3,6 +3,8 @@
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
 
+@plugin "@tailwindcss/typography";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -126,5 +128,14 @@
     }
   html {
     @apply font-sans;
+    }
+  h1 {
+    @apply text-2xl font-semibold tracking-tight;
+    }
+  h2 {
+    @apply text-xl font-semibold tracking-tight;
+    }
+  h3 {
+    @apply text-lg font-medium;
     }
 }
