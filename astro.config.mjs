@@ -7,8 +7,8 @@ import react from '@astrojs/react';
 // https://astro.build/config
 export default defineConfig({
   // Canonical links and the RSS feed build absolute URLs from this, so a wrong
-  // value ships wrong links. Update this when a custom domain is attached.
-  site: 'https://alexajuno.pages.dev',
+  // value ships wrong links.
+  site: 'https://alexajuno.com',
 
   markdown: {
     // Emit both themes as CSS variables rather than baking one in as inline
