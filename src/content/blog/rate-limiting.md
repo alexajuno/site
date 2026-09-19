@@ -1,6 +1,6 @@
 ---
 title: "Rate Limiting and Identifying Users"
-pubDate: 2025-09-24 11:30:00 +0700
+pubDate: 2025-09-24
 ---
 
 Recently I had a chance to work with the topic of rate limiting/throttling, and I want to share a bit.

@@ -1,6 +1,6 @@
 ---
 title: "Building a Simple Full-Text Search Feature"
-pubDate: 2025-07-28 00:10:57 +0700
+pubDate: 2025-07-28
 ---
 
 Recently, I built a simple full-text search feature for an app, and I thought it might be fun to share some of the challenges, decisions, and insights along the way.

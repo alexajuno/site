@@ -1,6 +1,6 @@
 ---
 title: "Some Retrospective Thoughts on Building JAMC - A Q&A Platform"
-pubDate: 2025-06-05 00:50:32 +0700
+pubDate: 2025-06-05
 ---
 
 ## Why I Started

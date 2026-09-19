@@ -1,6 +1,6 @@
 ---
 title: "Reflections on Security in Modern SaaS Products"
-pubDate: 2025-10-24 12:00:00 +0000
+pubDate: 2025-10-24
 ---
 
 Recently, I had the chance to look at a real SaaS product from a security perspective. It was a fascinating experience, helping me see both how far modern software has come and how many gaps still remain.

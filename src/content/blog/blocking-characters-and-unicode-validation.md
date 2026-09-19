@@ -1,6 +1,6 @@
 ---
 title: "Blocking Characters and Unicode Validation"
-pubDate: 2025-11-08 07:50:36 +0700
+pubDate: 2025-11-08
 ---
 
 Recently I had a chance to work on blocking certain characters from user input in a text field. It sounds simple on the surface, but it ended up dragging me into the weird and slightly chaotic world of Unicode.
