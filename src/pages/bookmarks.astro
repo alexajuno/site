@@ -1,0 +1,59 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import Prompt from '@/components/Prompt.astro';
+import { formatISODate, getYear } from '@/lib/posts';
+
+const bookmarks = (await getCollection('bookmarks')).sort(
+	(a, b) => b.data.added.valueOf() - a.data.added.valueOf(),
+);
+
+const bookmarksByYear = Map.groupBy(bookmarks, (bookmark) => getYear(bookmark.data.added));
+---
+
+<Layout title="Bookmarks" description="Engineering links alexajuno found worth keeping.">
+	<header>
+		<Prompt as="h1" command="ls -la ~/bookmarks" label="Bookmarks" />
+		<p class="mt-4 text-sm text-muted-foreground">
+			{bookmarks.length} {bookmarks.length === 1 ? 'link' : 'links'}
+		</p>
+	</header>
+
+	{
+		[...bookmarksByYear].map(([year, yearBookmarks]) => (
+			<section class="mt-12 first:mt-10">
+				<h2
+					class="flex items-center gap-4 text-sm font-medium text-muted-foreground tabular-nums"
+				>
+					{year}
+					<span class="h-px flex-1 bg-border" aria-hidden="true" />
+					<span class="text-xs font-normal">{yearBookmarks.length}</span>
+				</h2>
+				<div class="mt-3 flex flex-col">
+					{yearBookmarks.map(({ data: { url, title, added, note } }) => (
+						<a
+							href={url}
+							class="group -mx-2 flex flex-col gap-x-4 gap-y-0.5 rounded-sm px-2 py-1.5 transition-colors hover:bg-muted/60 sm:flex-row sm:items-baseline"
+						>
+							<time
+								datetime={added.toISOString()}
+								class="shrink-0 text-xs text-muted-foreground tabular-nums transition-colors group-hover:text-primary sm:text-sm"
+							>
+								{formatISODate(added)}
+							</time>
+							<span>
+								<span class="text-foreground transition-colors group-hover:text-primary">
+									{title}
+								</span>
+								<span class="ml-2 text-xs text-muted-foreground">
+									{new URL(url).hostname}
+								</span>
+								{note && <span class="mt-0.5 block text-xs text-muted-foreground">{note}</span>}
+							</span>
+						</a>
+					))}
+				</div>
+			</section>
+		))
+	}
+</Layout>

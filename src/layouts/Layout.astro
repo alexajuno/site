@@ -16,6 +16,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
 const path = Astro.url.pathname;
 const nav = [
 	{ label: 'blog', href: '/blog', match: (p: string) => p.startsWith('/blog') },
+	{ label: 'bookmarks', href: '/bookmarks', match: (p: string) => p.startsWith('/bookmarks') },
 ];
 
 const year = new Date().getFullYear();
