@@ -9,7 +9,7 @@ recently my position at work has changed a bit. i'm not sure how to describe it,
 
 part of it is that i'm now the sole engineer on a running product, which is how the manager wants it. the teammates from the ai side, who used to only write python, are moving into web work because the workload is too much for one person.
 
-but as i worried at the start, when the manager proposed this: when teammates with no web expertise start dumping ai-generated prs on you and you have to review them, you can tell immediately that the code is bad and full of holes. not broken in the obvious way, either. it's functional line by line and wrong in the details. even the manager dumps ai slop on you. he doesn't have the time, and honestly you can't blame him for that. but i've been getting a lot of it lately and i'm tired of it. "sick of it" is more exact.
+but as i worried at the start, when the manager proposed this: when teammates with no web expertise start dumping ai-generated prs on you and you have to review them, you can tell immediately that the code is bad and full of holes. not broken in the obvious way, either. it's functional line by line and wrong in the big picture. even the manager dumps ai slop on you. he doesn't have the time, and honestly you can't blame him for that. but i've been getting a lot of it lately and i'm tired of it. "sick of it" is more exact.
 
 at first i didn't know why. but the annoyance was there, so i tried to figure out what was going on and whether there was a name for it. turns out people everywhere are dealing with this, and the term is "workslop": ai-generated work content that masquerades as good work, but lacks the substance to meaningfully advance a given task.
 
