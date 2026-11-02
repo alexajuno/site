@@ -36,7 +36,7 @@ i don't have a stats background, so i used ai to research how statistics handles
 
 after each call, the breaker asks whether the service is fine or broken. in statistics that's a hypothesis test, and a test needs both answers spelled out. so the breaker gets two failure rates: a fine service fails 5% of its calls, which we can live with, and a broken one fails 20%, which is worth skipping.
 
-the results come in one at a time, and the breaker should decide as soon as it has seen enough. abraham wald worked out a test for that in 1945, the sequential probability ratio test: weigh each result as it comes in, and stop once the evidence is strong enough either way.
+the results come in one at a time, and the breaker should decide as soon as it has seen enough. abraham wald worked out a test for that in 1943, and published it in 1945: the sequential probability ratio test: weigh each result as it comes in, and stop once the evidence is strong enough either way.
 
 a test like that can be wrong in two ways. it can call a fine service broken, a false alarm, or call a broken service fine, a miss. neither can be ruled out, so you pick how often you accept each, and the test works out how much evidence that takes.
 
@@ -237,11 +237,11 @@ the trials go one at a time. a call to a service that's still failing can hang u
 
 on a quiet service that makes the trials slow: 18 of them at a call a minute take 18 minutes. so the time half-open may take comes from the traffic as well, three times as long as the trials to close would take at the service's pace. i picked the three myself. when that time runs out, the breaker closes if the score is below 0, and opens again otherwise.
 
-a trial that doesn't answer within the longest a call can take counts as lost, so a server that died in the middle of a trial can't keep the breaker half-open.
+a trial that doesn't answer within the time a call is given counts as lost and the next one goes, so a server that died in the middle of a trial can't keep the breaker half-open.
 
 ### real calls as trials
 
-write-ups of the pattern mention two kinds of trials: real calls, or a separate health check. i used real calls:
+write-ups of the pattern mention two ways to tell whether the service is back: real calls, or a separate health check. i used real calls:
 
 - a failed trial doesn't fail the user's call. it moves on to the fallback like any other failure, so that user only waits longer.
 - a health check can pass while real calls fail, for example when the service fails only on some inputs.
@@ -292,7 +292,7 @@ so every change of state gets a new number, a generation, and each call carries 
 
 ### what counts as a failure
 
-only failures that mean the service is failing count: a timeout, a refused connection, a 5xx or a 429. a call the service refuses because of its input doesn't count, and neither does a rate limit on a user's own account.
+only failures that mean the service is failing count: a timeout, a refused connection, a 5xx, a 429, or the service turning down our own key or account. a call the service refuses because of its input doesn't count, and neither does a rate limit on a user's own account.
 
 ## where it stands
 
@@ -313,5 +313,6 @@ it's been on prod for about two weeks. once it meets a real outage, i'll look at
 - [Ville's inequality (Wikipedia)](https://en.wikipedia.org/wiki/Ville%27s_inequality)
 - [Procedures for Reacting to a Change in Distribution (Lorden, 1971)](https://projecteuclid.org/journals/annals-of-mathematical-statistics/volume-42/issue-6/Procedures-for-Reacting-to-a-Change-in-Distribution/10.1214/aoms/1177693055.full)
 - [Load (computing), the exponentially damped moving average (Wikipedia)](https://en.wikipedia.org/wiki/Load_(computing))
+- [Circuit breaker (Portkey AI gateway docs)](https://portkey.ai/docs/product/ai-gateway/circuit-breaker)
 - [Outlier detection (Envoy docs)](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/upstream/outlier)
 - [Timeouts, retries, and backoff with jitter (Amazon Builders' Library)](https://builder.aws.com/content/3EumjoZascWd1oZiEgL8ORlv3qE/timeouts-retries-and-backoff-with-jitter)
