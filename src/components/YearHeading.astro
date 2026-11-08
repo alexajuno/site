@@ -1,0 +1,17 @@
+---
+/** A year over a list grouped by it: the year in a honey pill, a rule, a count. */
+interface Props {
+	year: number;
+	count: number;
+}
+
+const { year, count } = Astro.props;
+---
+
+<h2 class="mt-9 mb-2 flex items-center gap-3 text-sm font-normal first:mt-8">
+	<span class="rounded-sm bg-date-tint px-3 font-mono text-[0.8125rem] font-medium text-date tabular-nums">
+		{year}
+	</span>
+	<span class="h-px flex-1 bg-border" aria-hidden="true"></span>
+	<span class="text-[0.8125rem] text-muted-foreground tabular-nums">{count}</span>
+</h2>

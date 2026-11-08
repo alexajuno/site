@@ -40,3 +40,12 @@ export function formatLongDate(date: Date): string {
 export function getYear(date: Date): number {
 	return Number(formatISODate(date).slice(0, 4));
 }
+
+/** `Jul 24` — for lists already grouped under their year. */
+export function formatShortDate(date: Date): string {
+	return new Intl.DateTimeFormat('en-US', {
+		month: 'short',
+		day: '2-digit',
+		timeZone: SITE_TIMEZONE,
+	}).format(date);
+}

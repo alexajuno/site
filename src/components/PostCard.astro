@@ -1,0 +1,22 @@
+---
+import { Card } from '@/components/ui/card';
+import type { Post } from '@/lib/posts';
+
+interface Props {
+	post: Post;
+	/** Which way it leads, such as `older →`. */
+	label: string;
+	align?: 'start' | 'end';
+}
+
+const { post, label, align = 'start' } = Astro.props;
+---
+
+<a href={`/blog/${post.id}`} class="group block">
+	<Card
+		className={`gap-1 rounded-md border-0 bg-muted px-5 py-4 text-[0.9375rem] shadow-none ring-0 transition-colors group-hover:bg-border/60 ${align === 'end' ? 'sm:text-right' : ''}`}
+	>
+		<span class="text-xs text-muted-foreground">{label}</span>
+		<span class="text-foreground transition-colors group-hover:text-here-text">{post.data.title}</span>
+	</Card>
+</a>

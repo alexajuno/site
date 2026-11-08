@@ -1,13 +1,20 @@
 ---
 import '../styles/global.css';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import Desk from '@/components/Desk.astro';
 
 interface Props {
 	title?: string;
 	description?: string;
+	/** The home page's desk drawing, with the `hero` slot beside it. */
+	hero?: boolean;
 }
 
-const { title = 'alexajuno', description = "giao's little digital garden" } = Astro.props;
+const {
+	title = 'alexajuno',
+	description = "giao's little digital garden",
+	hero = false,
+} = Astro.props;
 
 const siteTitle = 'alexajuno';
 const pageTitle = title === siteTitle ? siteTitle : `${title} — ${siteTitle}`;
@@ -15,15 +22,23 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
 
 const path = Astro.url.pathname;
 const nav = [
-	{ label: 'blog', href: '/blog', match: (p: string) => p.startsWith('/blog') },
+	{ label: 'home', href: '/', match: (p: string) => p === '/' },
+	{ label: 'writing', href: '/blog', match: (p: string) => p.startsWith('/blog') },
 	{ label: 'bookmarks', href: '/bookmarks', match: (p: string) => p.startsWith('/bookmarks') },
 ];
 
 const year = new Date().getFullYear();
+
+const links = [
+	{ label: 'rss', href: '/rss.xml' },
+	{ label: 'github', href: 'https://github.com/alexajuno' },
+	{ label: 'x', href: 'https://x.com/giolynx104' },
+	{ label: 'email', href: 'mailto:giolynx104@gmail.com' },
+];
 ---
 
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -39,78 +54,130 @@ const year = new Date().getFullYear();
 		<meta property="og:description" content={description} />
 		<meta property="og:url" content={canonical} />
 		<meta name="twitter:card" content="summary" />
-		<meta name="theme-color" content="#14161c" />
+		<meta name="theme-color" content="#F9F5ED" media="(prefers-color-scheme: light)" />
+		<meta name="theme-color" content="#1D1815" media="(prefers-color-scheme: dark)" />
 		{/*
-		 * Dark is the default regardless of the OS setting, and light is an opt-in
-		 * the toggle stores. Runs inline before first paint so an opted-in visitor
-		 * never sees a flash of the dark theme.
+		 * The theme follows the device until the visitor picks one with the
+		 * toggle, which is stored. Runs inline before first paint so the page
+		 * never flashes the other theme.
 		 */}
 		<script is:inline>
+			const stored = localStorage.getItem('theme');
 			document.documentElement.classList.toggle(
 				'dark',
-				localStorage.getItem('theme') !== 'light',
+				stored ? stored === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches,
 			);
 		</script>
 	</head>
-	<body class="min-h-svh">
-		<div class="mx-auto flex min-h-svh max-w-3xl flex-col px-5 sm:px-8">
-			<header
-				class="flex items-center justify-between gap-4 border-b py-5 text-sm"
-			>
-				<a
-					href="/"
-					class="group inline-flex items-baseline gap-1.5 font-medium tracking-tight transition-colors hover:text-primary"
-				>
-					<span aria-hidden="true">
-						<span class="text-primary">~/</span>{siteTitle}
-					</span>
-					<span
-						class="text-muted-foreground/70 transition-colors group-hover:text-primary"
-						aria-hidden="true">$</span
-					>
-					<span class="sr-only">{siteTitle}, home</span>
-				</a>
-				<nav class="flex items-center gap-1 text-sm">
+	<body class="flex min-h-svh flex-col">
+		<div class:list={['wall', hero ? 'wall-hero' : 'wall-band']}>
+			<header class="relative z-10 mx-auto flex w-full max-w-[960px] items-center justify-between gap-4 px-5 pt-6 pb-5 text-[0.9375rem] sm:px-8 lg:px-0">
+				<a href="/" class="font-semibold tracking-tight text-foreground">{siteTitle}</a>
+				<nav class="flex items-center gap-5 sm:gap-7">
 					{
 						nav.map(({ label, href, match }) => (
 							<a
 								href={href}
 								aria-current={match(path) ? 'page' : undefined}
-								class="rounded-sm px-1.5 py-1 text-muted-foreground transition-colors hover:text-foreground aria-[current=page]:text-primary"
+								class="border-b-2 border-transparent pb-0.5 text-muted-foreground transition-colors hover:text-foreground aria-[current=page]:border-here aria-[current=page]:text-foreground"
 							>
-								<span class="text-muted-foreground/50" aria-hidden="true">
-									[
-								</span>
 								{label}
-								<span class="text-muted-foreground/50" aria-hidden="true">
-									]
-								</span>
 							</a>
 						))
 					}
 					<ThemeToggle client:load />
 				</nav>
 			</header>
-
-			<main class="flex-1 py-12 sm:py-16">
-				<slot />
-			</main>
-
-			<footer
-				class="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-t py-6 text-xs text-muted-foreground"
-			>
-				<p>© {year} {siteTitle}</p>
-				<p class="flex items-center gap-4">
-					<a href="/rss.xml" class="transition-colors hover:text-foreground">rss</a>
-					<a
-						href="https://github.com/alexajuno"
-						class="transition-colors hover:text-foreground">github</a
-					>
-					<a href="mailto:giolynx104@gmail.com" class="transition-colors hover:text-foreground"
-						>email</a
-					>
-				</p>
-			</footer>
+			{
+				hero && (
+					<div class="hero-body relative z-10 mx-auto w-full max-w-[960px] px-5 sm:px-8 lg:px-0">
+						<slot name="hero" />
+					</div>
+				)
+			}
+			{hero && <Desk class="hero-desk" />}
 		</div>
+
+		<main class="mx-auto w-full max-w-[960px] flex-1 px-5 py-12 sm:px-8 sm:py-14 lg:px-0">
+			<slot />
+		</main>
+
+		<footer class="mx-auto flex w-full max-w-[960px] flex-wrap items-center justify-between gap-x-6 gap-y-2 px-5 sm:px-8 lg:px-0">
+			<div class="flex w-full flex-wrap items-center justify-between gap-x-6 gap-y-2 border-t py-6 text-sm text-muted-foreground">
+				<p>© {year} {siteTitle}</p>
+				<p class="flex items-center gap-5">
+					{
+						links.map(({ label, href }) => (
+							<a href={href} class="transition-colors hover:text-foreground">
+								{label}
+							</a>
+						))
+					}
+				</p>
+			</div>
+		</footer>
 	</body>
 </html>
+
+<style>
+	/* The wall behind the desk, its wood along the bottom. */
+	.wall {
+		position: relative;
+		background: linear-gradient(var(--wall-top), var(--wall-bottom));
+	}
+
+	/* Every page but home: a short band of wall, the lamp's glow in its corner. */
+	.wall-band {
+		background:
+			radial-gradient(420px 160px at 82% 0, var(--glow-1), transparent 70%),
+			linear-gradient(var(--wall-top), var(--wall-bottom));
+		border-bottom: 6px solid var(--desk);
+	}
+
+	/*
+	 * Home: the drawing is 640 by 400, its bottom quarter the desk. On a phone
+	 * it sits under the intro at the screen's width; from lg it sits on the
+	 * right of a 1440 frame, beside the intro.
+	 */
+	.wall-hero {
+		--art-h: min(400px, 62.5vw);
+		--desk-h: calc(var(--art-h) / 4);
+		background:
+			linear-gradient(to top, var(--desk) var(--desk-h), var(--desk-edge) var(--desk-h), var(--desk-edge) calc(var(--desk-h) + 4px), transparent calc(var(--desk-h) + 4px)),
+			linear-gradient(var(--wall-top), var(--wall-bottom));
+		padding-bottom: var(--art-h);
+	}
+
+	.hero-body {
+		padding-top: 2.5rem;
+	}
+
+	.wall-hero :global(.hero-desk) {
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		width: 100%;
+		height: var(--art-h);
+		/* The glow is cut at the drawing's top edge; fade it in under the intro. */
+		mask-image: linear-gradient(transparent, #000 18%);
+		pointer-events: none;
+	}
+
+	@media (min-width: 1024px) {
+		.wall-hero {
+			--art-h: 400px;
+			height: 400px;
+			padding-bottom: 0;
+		}
+
+		.hero-body {
+			padding-top: 4.5rem;
+		}
+
+		.wall-hero :global(.hero-desk) {
+			width: 640px;
+			right: max(0px, calc(50% - 720px));
+			mask-image: none;
+		}
+	}
+</style>

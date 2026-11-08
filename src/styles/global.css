@@ -1,17 +1,17 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
-@import "@fontsource-variable/geist-mono";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/jetbrains-mono";
 
 @plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-    --font-mono: 'Geist Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace;
-    --font-sans: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
-    --font-heading: var(--font-mono);
+    --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+    --font-heading: var(--font-sans);
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -43,6 +43,15 @@
     --color-card: var(--card);
     --color-foreground: var(--foreground);
     --color-background: var(--background);
+    --color-date: var(--date);
+    --color-date-tint: var(--date-tint);
+    --color-site: var(--site);
+    --color-site-tint: var(--site-tint);
+    --color-link: var(--link);
+    --color-link-tint: var(--link-tint);
+    --color-here: var(--here);
+    --color-here-tint: var(--here-tint);
+    --color-here-text: var(--here-text);
     --radius-sm: calc(var(--radius) * 0.6);
     --radius-md: calc(var(--radius) * 0.8);
     --radius-lg: var(--radius);
@@ -52,75 +61,163 @@
     --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* Light terminal: warm off-white paper, ink text, a green that survives white. */
+/*
+ * The Paper palette, from the user's personal theme: eight ramps on one
+ * lightness scale. Step 700 on light and step 400 on dark read at 5.5:1 or
+ * more, so text takes those, and a tint pairs a hue's 100 with its 700.
+ */
 :root {
-    --background: oklch(0.985 0.003 120);
-    --foreground: oklch(0.24 0.012 250);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.24 0.012 250);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.24 0.012 250);
-    --primary: oklch(0.52 0.13 152);
-    --primary-foreground: oklch(0.99 0.005 120);
-    --secondary: oklch(0.95 0.006 250);
-    --secondary-foreground: oklch(0.24 0.012 250);
-    --muted: oklch(0.95 0.006 250);
-    --muted-foreground: oklch(0.52 0.012 250);
-    --accent: oklch(0.93 0.03 152);
-    --accent-foreground: oklch(0.32 0.09 152);
-    --destructive: oklch(0.55 0.21 27);
-    --border: oklch(0.89 0.008 250);
-    --input: oklch(0.89 0.008 250);
-    --ring: oklch(0.52 0.13 152);
-    --chart-1: oklch(0.52 0.13 152);
-    --chart-2: oklch(0.6 0.1 200);
-    --chart-3: oklch(0.55 0.12 60);
-    --chart-4: oklch(0.45 0.1 300);
-    --chart-5: oklch(0.4 0.02 250);
-    --radius: 0.25rem;
-    --sidebar: oklch(0.97 0.004 250);
-    --sidebar-foreground: oklch(0.24 0.012 250);
-    --sidebar-primary: oklch(0.52 0.13 152);
-    --sidebar-primary-foreground: oklch(0.99 0.005 120);
-    --sidebar-accent: oklch(0.93 0.03 152);
-    --sidebar-accent-foreground: oklch(0.32 0.09 152);
-    --sidebar-border: oklch(0.89 0.008 250);
-    --sidebar-ring: oklch(0.52 0.13 152);
+    --paper-50: #F9F5ED; --paper-100: #F3EEE3; --paper-200: #EAE2D4; --paper-300: #DBD1C1; --paper-400: #BBAF9F; --paper-500: #978A7B; --paper-600: #75695D; --paper-700: #5E5349; --paper-800: #443B34; --paper-900: #2E2723; --paper-950: #1D1815;
+    --clay-50: #FEF3E7; --clay-100: #FDE7D0; --clay-200: #F9D1AA; --clay-300: #F0B280; --clay-400: #DE8C59; --clay-500: #CC6F46; --clay-600: #A64F2D; --clay-700: #8D4128; --clay-800: #6B301E; --clay-900: #4E2116; --clay-950: #33160F;
+    --brick-50: #FFF2EF; --brick-100: #FFE4E0; --brick-200: #FECBC3; --brick-300: #F6ABA0; --brick-400: #E68378; --brick-500: #D4665C; --brick-600: #AC4740; --brick-700: #923B36; --brick-800: #6E2B28; --brick-900: #501E1C; --brick-950: #341412;
+    --honey-50: #FAF5EA; --honey-100: #F4EAD6; --honey-200: #EBD6B3; --honey-300: #DCBC84; --honey-400: #C89B4C; --honey-500: #B6811D; --honey-600: #906100; --honey-700: #7B5100; --honey-800: #5E3B00; --honey-900: #452A00; --honey-950: #2D1B03;
+    --moss-50: #F3F7EF; --moss-100: #E7EEDF; --moss-200: #D2DEC2; --moss-300: #B7C99E; --moss-400: #96AD73; --moss-500: #7F9654; --moss-600: #607536; --moss-700: #52622C; --moss-800: #3D4920; --moss-900: #2C3416; --moss-950: #1C220E;
+    --sea-50: #EFF7F7; --sea-100: #DFEFEF; --sea-200: #C2E0E0; --sea-300: #9DCBCB; --sea-400: #70B0B1; --sea-500: #4F9A9C; --sea-600: #2F797B; --sea-700: #276668; --sea-800: #1C4C4E; --sea-900: #133738; --sea-950: #0D2325;
+    --denim-50: #F0F6FC; --denim-100: #E1EDF9; --denim-200: #C7DCF2; --denim-300: #A6C4E6; --denim-400: #7FA7D4; --denim-500: #638FC2; --denim-600: #466E9D; --denim-700: #3B5D85; --denim-800: #2B4564; --denim-900: #1F3148; --denim-950: #14202F;
+    --plum-50: #FAF2F8; --plum-100: #F5E6F1; --plum-200: #EAD0E4; --plum-300: #DAB3D2; --plum-400: #C390BA; --plum-500: #AF76A5; --plum-600: #8B5783; --plum-700: #75496F; --plum-800: #583654; --plum-900: #3F263C; --plum-950: #291927;
 }
 
-/* Dark terminal: the default. Cool near-black with a phosphor green. */
+/*
+ * Light is Paper: cream paper, warm ink. Orange (clay) only marks where you
+ * are; every other hue has one job, tone on tone.
+ */
+:root {
+    --background: var(--paper-50);
+    --foreground: var(--paper-900);
+    --card: var(--paper-100);
+    --card-foreground: var(--paper-900);
+    --popover: var(--paper-50);
+    --popover-foreground: var(--paper-900);
+    --primary: var(--clay-600);
+    --primary-foreground: var(--clay-50);
+    --secondary: var(--paper-100);
+    --secondary-foreground: var(--paper-900);
+    --muted: var(--paper-100);
+    --muted-foreground: var(--paper-600);
+    --accent: var(--paper-100);
+    --accent-foreground: var(--paper-900);
+    --destructive: var(--brick-700);
+    --border: var(--paper-200);
+    --input: var(--paper-300);
+    --ring: var(--clay-500);
+    --chart-1: var(--clay-500);
+    --chart-2: var(--sea-600);
+    --chart-3: var(--honey-600);
+    --chart-4: var(--plum-600);
+    --chart-5: var(--paper-600);
+    --radius: 0.25rem;
+    --sidebar: var(--paper-100);
+    --sidebar-foreground: var(--paper-900);
+    --sidebar-primary: var(--clay-600);
+    --sidebar-primary-foreground: var(--clay-50);
+    --sidebar-accent: var(--paper-200);
+    --sidebar-accent-foreground: var(--paper-900);
+    --sidebar-border: var(--paper-200);
+    --sidebar-ring: var(--clay-500);
+
+    /* Each hue's one job. */
+    --date: var(--honey-700);
+    --date-tint: var(--honey-100);
+    --site: var(--sea-700);
+    --site-tint: var(--sea-100);
+    --link: var(--denim-700);
+    --link-tint: var(--denim-200);
+    --here: var(--clay-500);
+    --here-text: var(--clay-700);
+    --here-tint: var(--clay-100);
+
+    /* The desk drawing. */
+    --wall-top: #EFE5D3;
+    --wall-bottom: #E8DBC4;
+    --glow-1: #FFF6E6;
+    --glow-2: #F6E6CC;
+    --glow-3: #ECDDC3;
+    --desk: #E2C48F;
+    --desk-edge: #F2E3C6;
+    --pool-1: #F9EBD3;
+    --pool-2: #EFD3A4;
+    --shadow: #B89A6A;
+    --lamp: var(--paper-300);
+    --lamp-shade: var(--paper-300);
+    --lamp-shade-dark: var(--paper-400);
+    --lamp-base: var(--paper-100);
+    --lamp-base-side: var(--paper-400);
+    --lamp-mouth: #FFF8EC;
+    --laptop-lid: var(--paper-950);
+    --laptop-body: var(--paper-900);
+    --laptop-keys: var(--paper-800);
+    --pot: var(--paper-200);
+    --pot-side: var(--paper-300);
+}
+
+/*
+ * Dark is Coffee: the same desk after dark. Every ramp turns over, 50 for
+ * 950 and 100 for 900, so each hue keeps its job and its tone-on-tone pairs.
+ */
 .dark {
-    --background: oklch(0.175 0.012 255);
-    --foreground: oklch(0.91 0.01 250);
-    --card: oklch(0.215 0.014 255);
-    --card-foreground: oklch(0.91 0.01 250);
-    --popover: oklch(0.215 0.014 255);
-    --popover-foreground: oklch(0.91 0.01 250);
-    --primary: oklch(0.8 0.16 155);
-    --primary-foreground: oklch(0.19 0.03 155);
-    --secondary: oklch(0.26 0.014 255);
-    --secondary-foreground: oklch(0.91 0.01 250);
-    --muted: oklch(0.26 0.014 255);
-    --muted-foreground: oklch(0.65 0.014 250);
-    --accent: oklch(0.29 0.03 155);
-    --accent-foreground: oklch(0.85 0.14 155);
-    --destructive: oklch(0.7 0.19 22);
-    --border: oklch(1 0 0 / 12%);
-    --input: oklch(1 0 0 / 16%);
-    --ring: oklch(0.8 0.16 155);
-    --chart-1: oklch(0.8 0.16 155);
-    --chart-2: oklch(0.7 0.12 200);
-    --chart-3: oklch(0.75 0.13 70);
-    --chart-4: oklch(0.65 0.12 300);
-    --chart-5: oklch(0.6 0.02 250);
-    --sidebar: oklch(0.215 0.014 255);
-    --sidebar-foreground: oklch(0.91 0.01 250);
-    --sidebar-primary: oklch(0.8 0.16 155);
-    --sidebar-primary-foreground: oklch(0.19 0.03 155);
-    --sidebar-accent: oklch(0.29 0.03 155);
-    --sidebar-accent-foreground: oklch(0.85 0.14 155);
-    --sidebar-border: oklch(1 0 0 / 12%);
-    --sidebar-ring: oklch(0.8 0.16 155);
+    --background: var(--paper-950);
+    --foreground: var(--paper-100);
+    --card: var(--paper-900);
+    --card-foreground: var(--paper-100);
+    --popover: var(--paper-900);
+    --popover-foreground: var(--paper-100);
+    --primary: var(--clay-400);
+    --primary-foreground: var(--clay-950);
+    --secondary: var(--paper-900);
+    --secondary-foreground: var(--paper-100);
+    --muted: var(--paper-900);
+    --muted-foreground: var(--paper-400);
+    --accent: var(--paper-900);
+    --accent-foreground: var(--paper-100);
+    --destructive: var(--brick-400);
+    --border: var(--paper-800);
+    --input: var(--paper-700);
+    --ring: var(--clay-500);
+    --chart-1: var(--clay-400);
+    --chart-2: var(--sea-400);
+    --chart-3: var(--honey-400);
+    --chart-4: var(--plum-400);
+    --chart-5: var(--paper-400);
+    --sidebar: var(--paper-900);
+    --sidebar-foreground: var(--paper-100);
+    --sidebar-primary: var(--clay-400);
+    --sidebar-primary-foreground: var(--clay-950);
+    --sidebar-accent: var(--paper-800);
+    --sidebar-accent-foreground: var(--paper-100);
+    --sidebar-border: var(--paper-800);
+    --sidebar-ring: var(--clay-500);
+
+    --date: var(--honey-300);
+    --date-tint: var(--honey-900);
+    --site: var(--sea-300);
+    --site-tint: var(--sea-900);
+    --link: var(--denim-300);
+    --link-tint: var(--denim-800);
+    --here: var(--clay-400);
+    --here-text: var(--clay-300);
+    --here-tint: var(--clay-900);
+
+    /* At night the lamp is the only light. */
+    --wall-top: #2A231F;
+    --wall-bottom: #241E1A;
+    --glow-1: #7A5532;
+    --glow-2: #3E2E22;
+    --glow-3: #2A231F;
+    --desk: #4A3826;
+    --desk-edge: #6B5232;
+    --pool-1: #C99A5E;
+    --pool-2: #7A5A36;
+    --shadow: #15110E;
+    --lamp: #BDB2A2;
+    --lamp-shade: #C9BFB0;
+    --lamp-shade-dark: #978A7B;
+    --lamp-base: #CFC5B6;
+    --lamp-base-side: #75695D;
+    --laptop-lid: #151110;
+    --laptop-body: #2A2320;
+    --laptop-keys: #3A322C;
+    --pot: #52622C;
+    --pot-side: #3D4920;
 }
 
 @layer base {
@@ -128,7 +225,7 @@
     @apply border-border outline-ring/50;
     }
   html {
-    @apply font-mono;
+    @apply font-sans;
     -webkit-text-size-adjust: 100%;
     /* Reserve the scrollbar track always, so a short page like 404 does not
      * sit a scrollbar-width to the right of a long one. */
@@ -136,135 +233,109 @@
     }
   body {
     @apply bg-background text-foreground antialiased;
-    font-size: 0.9375rem;
-    line-height: 1.7;
+    font-size: 1rem;
+    line-height: 1.6;
     }
-  h1 {
-    @apply text-xl font-semibold tracking-tight;
-    }
-  h2 {
-    @apply text-lg font-semibold tracking-tight;
-    }
-  h3 {
-    @apply text-base font-semibold;
+  h1, h2, h3 {
+    @apply font-semibold tracking-tight;
     }
   ::selection {
-    @apply bg-primary text-primary-foreground;
+    @apply bg-here-tint text-foreground;
     }
 }
 
-/*
- * Long-form post body. Mono at full size reads heavy, so the measure is kept
- * narrow and the leading loose. Headings stay flush-left with a `#` marker to
- * echo both markdown source and a shell comment.
- */
-.prose-terminal {
+/* Long-form post body: a book's measure, loose leading, quiet blocks. */
+.prose-post {
   @apply prose prose-neutral dark:prose-invert;
-  /* The shell is one width on every route, so the measure is capped here rather
-   * than by narrowing the container and shifting the header with it. */
-  max-width: 68ch;
+  max-width: 680px;
   --tw-prose-body: var(--foreground);
   --tw-prose-headings: var(--foreground);
   --tw-prose-bold: var(--foreground);
-  --tw-prose-links: var(--primary);
+  --tw-prose-links: var(--link);
   --tw-prose-quotes: var(--muted-foreground);
   --tw-prose-code: var(--foreground);
   --tw-prose-counters: var(--muted-foreground);
-  --tw-prose-bullets: var(--primary);
+  --tw-prose-bullets: var(--date);
   --tw-prose-hr: var(--border);
-  --tw-prose-quote-borders: var(--primary);
-  font-size: 0.9375rem;
-  line-height: 1.85;
+  --tw-prose-quote-borders: var(--border);
+  font-size: 1.0625rem;
+  line-height: 1.75;
 }
 
-.prose-terminal :is(h2, h3, h4) {
+.prose-post :is(h2, h3, h4) {
   @apply scroll-mt-24 tracking-tight;
 }
 
-.prose-terminal :is(h2, h3)::before {
-  @apply mr-2 font-normal text-primary/60 select-none;
+.prose-post h2 {
+  @apply mt-11 mb-2.5 text-[1.4rem];
 }
 
-.prose-terminal h2::before {
-  content: '##';
+.prose-post a {
+  @apply font-normal underline underline-offset-4 transition-colors;
+  text-decoration-color: var(--link-tint);
+  text-decoration-thickness: 2px;
 }
 
-.prose-terminal h3::before {
-  content: '###';
+.prose-post a:hover {
+  text-decoration-color: var(--link);
 }
 
-.prose-terminal a {
-  @apply font-normal underline decoration-primary/40 underline-offset-4 transition-colors;
-  text-decoration-thickness: 1px;
+.prose-post :not(pre) > code {
+  @apply rounded-sm bg-muted px-1.5 py-0.5 text-[0.86em] font-normal;
 }
 
-.prose-terminal a:hover {
-  @apply decoration-primary;
-}
-
-.prose-terminal :not(pre) > code {
-  @apply rounded-sm bg-muted px-1.5 py-0.5 text-[0.85em] font-medium;
-}
-
-.prose-terminal :not(pre) > code::before,
-.prose-terminal :not(pre) > code::after {
+.prose-post :not(pre) > code::before,
+.prose-post :not(pre) > code::after {
   content: none;
 }
 
-.prose-terminal pre {
-  @apply rounded-md border text-[0.85em] leading-relaxed;
+.prose-post pre {
+  @apply rounded-md px-5.5 py-4.5 text-[0.8em] leading-relaxed;
   scrollbar-width: thin;
   scrollbar-color: var(--border) transparent;
 }
 
-.prose-terminal pre::-webkit-scrollbar {
+.prose-post pre::-webkit-scrollbar {
   height: 0.5rem;
 }
 
-.prose-terminal pre::-webkit-scrollbar-track {
+.prose-post pre::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.prose-terminal pre::-webkit-scrollbar-thumb {
+.prose-post pre::-webkit-scrollbar-thumb {
   @apply rounded-full bg-muted-foreground/30;
 }
 
 /*
  * Shiki is configured with `defaultColor: false`, so it ships both themes as
- * custom properties and leaves the choice to CSS. Backgrounds are only set on
- * the block itself; the spans inside carry colour alone.
+ * custom properties and leaves the choice to CSS. The block takes the page's
+ * own muted surface rather than the theme's background, so code sits on the
+ * paper like the rest.
  */
-.prose-terminal .astro-code {
-  background-color: var(--shiki-light-bg);
+.prose-post .astro-code {
+  background-color: var(--muted);
 }
 
-.prose-terminal .astro-code,
-.prose-terminal .astro-code span {
+.prose-post .astro-code,
+.prose-post .astro-code span {
   color: var(--shiki-light);
 }
 
-.dark .prose-terminal .astro-code {
-  background-color: var(--shiki-dark-bg);
-}
-
-.dark .prose-terminal .astro-code,
-.dark .prose-terminal .astro-code span {
+.dark .prose-post .astro-code,
+.dark .prose-post .astro-code span {
   color: var(--shiki-dark);
 }
 
-.prose-terminal blockquote {
+.prose-post blockquote {
   @apply border-l-2 pl-5 font-normal not-italic;
 }
 
-.prose-terminal blockquote p::before,
-.prose-terminal blockquote p::after {
+.prose-post blockquote p::before,
+.prose-post blockquote p::after {
   content: none;
 }
 
-.prose-terminal :is(ul, ol) > li::marker {
-  @apply text-primary/70;
-}
-
-.prose-terminal img {
-  @apply rounded-md border;
+.prose-post img {
+  @apply rounded-md;
 }

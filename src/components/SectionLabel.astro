@@ -1,0 +1,12 @@
+---
+/** A small uppercase label over a section of the home page. */
+interface Props {
+	as?: 'h2' | 'h3';
+}
+
+const { as: Tag = 'h2' } = Astro.props;
+---
+
+<Tag class="mb-3 text-[0.8125rem] font-semibold tracking-[0.08em] text-muted-foreground uppercase">
+	<slot />
+</Tag>
