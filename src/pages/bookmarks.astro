@@ -14,7 +14,7 @@ const bookmarksByYear = Map.groupBy(bookmarks, (bookmark) => getYear(bookmark.da
 <Layout title="Bookmarks" description="Engineering links alexajuno found worth keeping.">
 	<div class="mx-auto max-w-[720px]">
 		<header>
-			<h1 class="text-[2.125rem] font-semibold tracking-tight">bookmarks</h1>
+			<h1 class="font-serif text-[2.125rem] font-semibold text-heading">bookmarks</h1>
 			<p class="mt-1 text-[0.9375rem] text-muted-foreground">
 				{bookmarks.length} {bookmarks.length === 1 ? 'link' : 'links'}
 			</p>

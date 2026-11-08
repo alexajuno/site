@@ -11,12 +11,10 @@ export default defineConfig({
   site: 'https://alexajuno.com',
 
   markdown: {
-    // Emit both themes as CSS variables rather than baking one in as inline
-    // styles, so code blocks follow the site's dark/light toggle. global.css
-    // picks which variable applies.
+    // Colour code from CSS variables rather than a baked-in theme, so code
+    // takes the theme's code roles and follows dark mode. global.css maps them.
     shikiConfig: {
-      themes: { light: 'vitesse-light', dark: 'vitesse-dark' },
-      defaultColor: false
+      theme: 'css-variables'
     }
   },
 

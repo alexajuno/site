@@ -2,6 +2,8 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/inter";
+@import "@fontsource-variable/literata/opsz.css";
+@import "@fontsource-variable/literata/opsz-italic.css";
 @import "@fontsource-variable/jetbrains-mono";
 
 @plugin "@tailwindcss/typography";
@@ -11,7 +13,8 @@
 @theme inline {
     --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace;
     --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
-    --font-heading: var(--font-sans);
+    --font-heading: var(--font-serif);
+    --font-serif: 'Literata Variable', ui-serif, Georgia, serif;
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -52,6 +55,7 @@
     --color-here: var(--here);
     --color-here-tint: var(--here-tint);
     --color-here-text: var(--here-text);
+    --color-heading: var(--heading);
     --radius-sm: calc(var(--radius) * 0.6);
     --radius-md: calc(var(--radius) * 0.8);
     --radius-lg: var(--radius);
@@ -78,53 +82,94 @@
 }
 
 /*
- * Light is Paper: cream paper, warm ink. Orange (clay) only marks where you
- * are; every other hue has one job, tone on tone.
+ * The theme's roles, from ~/projects/muse/setup/theme/roles.json: what each
+ * colour is for, so dark mode is one swap. Light is Paper.
  */
 :root {
-    --background: var(--paper-50);
-    --foreground: var(--paper-900);
-    --card: var(--paper-100);
-    --card-foreground: var(--paper-900);
-    --popover: var(--paper-50);
-    --popover-foreground: var(--paper-900);
-    --primary: var(--clay-600);
-    --primary-foreground: var(--clay-50);
-    --secondary: var(--paper-100);
-    --secondary-foreground: var(--paper-900);
-    --muted: var(--paper-100);
-    --muted-foreground: var(--paper-600);
-    --accent: var(--paper-100);
-    --accent-foreground: var(--paper-900);
-    --destructive: var(--brick-700);
-    --border: var(--paper-200);
-    --input: var(--paper-300);
-    --ring: var(--clay-500);
-    --chart-1: var(--clay-500);
-    --chart-2: var(--sea-600);
-    --chart-3: var(--honey-600);
-    --chart-4: var(--plum-600);
-    --chart-5: var(--paper-600);
-    --radius: 0.25rem;
-    --sidebar: var(--paper-100);
-    --sidebar-foreground: var(--paper-900);
-    --sidebar-primary: var(--clay-600);
-    --sidebar-primary-foreground: var(--clay-50);
-    --sidebar-accent: var(--paper-200);
-    --sidebar-accent-foreground: var(--paper-900);
-    --sidebar-border: var(--paper-200);
-    --sidebar-ring: var(--clay-500);
+    --bg-app: var(--paper-100);
+    --bg-panel: var(--paper-50);
+    --bg-raised: var(--paper-50);
+    --bg-hover: var(--paper-200);
+    --bg-active: var(--paper-300);
+    --border-1: var(--paper-200);
+    --border-2: var(--paper-300);
+    --border-3: var(--paper-400);
+    --text-1: var(--paper-950);
+    --text-2: var(--paper-900);
+    --text-3: var(--paper-700);
+    --text-4: var(--paper-600);
+    --text-5: var(--paper-500);
+    --accent: var(--clay-500);
+    --accent-hover: var(--clay-400);
+    --on-accent: var(--paper-950);
+    --accent-text: var(--clay-700);
+    --link: var(--denim-700);
+    --selection: var(--paper-300);
+    --success: var(--moss-700);
+    --warning: var(--honey-700);
+    --danger: var(--brick-700);
+    --info: var(--denim-700);
+    --diff-add: var(--moss-100);
+    --diff-remove: var(--brick-100);
+    --code-keyword: var(--plum-700);
+    --code-function: var(--denim-700);
+    --code-type: var(--sea-700);
+    --code-string: var(--moss-700);
+    --code-number: var(--honey-700);
+    --code-constant: var(--brick-700);
+    --code-comment: var(--paper-600);
+}
 
-    /* Each hue's one job. */
+/*
+ * The site's tokens, each a role. Orange (accent) only marks where you are;
+ * every other hue has one job, tone on tone.
+ */
+:root, .dark {
+    --background: var(--bg-app);
+    --foreground: var(--text-2);
+    --card: var(--bg-raised);
+    --card-foreground: var(--text-2);
+    --popover: var(--bg-raised);
+    --popover-foreground: var(--text-2);
+    --primary: var(--accent);
+    --primary-foreground: var(--on-accent);
+    --secondary: var(--bg-hover);
+    --secondary-foreground: var(--text-2);
+    --muted: var(--bg-hover);
+    --muted-foreground: var(--text-3);
+    --accent-foreground: var(--text-1);
+    --destructive: var(--danger);
+    --border: var(--border-1);
+    --input: var(--border-2);
+    --ring: var(--accent);
+    --chart-1: var(--accent);
+    --chart-2: var(--code-type);
+    --chart-3: var(--warning);
+    --chart-4: var(--code-keyword);
+    --chart-5: var(--text-4);
+    --radius: 0.25rem;
+    --sidebar: var(--bg-raised);
+    --sidebar-foreground: var(--text-2);
+    --sidebar-primary: var(--accent);
+    --sidebar-primary-foreground: var(--on-accent);
+    --sidebar-accent: var(--bg-hover);
+    --sidebar-accent-foreground: var(--text-1);
+    --sidebar-border: var(--border-1);
+    --sidebar-ring: var(--accent);
+
+    --heading: var(--text-1);
+    --here: var(--accent);
+    --here-text: var(--accent-text);
+    --here-tint: var(--bg-active);
+}
+
+/* The site's own jobs the roles do not name: a date is honey, a link's site is sea. */
+:root {
     --date: var(--honey-700);
     --date-tint: var(--honey-100);
     --site: var(--sea-700);
     --site-tint: var(--sea-100);
-    --link: var(--denim-700);
     --link-tint: var(--denim-200);
-    --here: var(--clay-500);
-    --here-text: var(--clay-700);
-    --here-tint: var(--clay-100);
 
     /* The desk drawing. */
     --wall-top: #EFE5D3;
@@ -150,52 +195,46 @@
     --pot-side: var(--paper-300);
 }
 
-/*
- * Dark is Coffee: the same desk after dark. Every ramp turns over, 50 for
- * 950 and 100 for 900, so each hue keeps its job and its tone-on-tone pairs.
- */
+/* Dark is Coffee: the same desk after dark. */
 .dark {
-    --background: var(--paper-950);
-    --foreground: var(--paper-100);
-    --card: var(--paper-900);
-    --card-foreground: var(--paper-100);
-    --popover: var(--paper-900);
-    --popover-foreground: var(--paper-100);
-    --primary: var(--clay-400);
-    --primary-foreground: var(--clay-950);
-    --secondary: var(--paper-900);
-    --secondary-foreground: var(--paper-100);
-    --muted: var(--paper-900);
-    --muted-foreground: var(--paper-400);
-    --accent: var(--paper-900);
-    --accent-foreground: var(--paper-100);
-    --destructive: var(--brick-400);
-    --border: var(--paper-800);
-    --input: var(--paper-700);
-    --ring: var(--clay-500);
-    --chart-1: var(--clay-400);
-    --chart-2: var(--sea-400);
-    --chart-3: var(--honey-400);
-    --chart-4: var(--plum-400);
-    --chart-5: var(--paper-400);
-    --sidebar: var(--paper-900);
-    --sidebar-foreground: var(--paper-100);
-    --sidebar-primary: var(--clay-400);
-    --sidebar-primary-foreground: var(--clay-950);
-    --sidebar-accent: var(--paper-800);
-    --sidebar-accent-foreground: var(--paper-100);
-    --sidebar-border: var(--paper-800);
-    --sidebar-ring: var(--clay-500);
+    --bg-app: var(--paper-950);
+    --bg-panel: var(--paper-950);
+    --bg-raised: var(--paper-900);
+    --bg-hover: var(--paper-900);
+    --bg-active: var(--paper-800);
+    --border-1: var(--paper-900);
+    --border-2: var(--paper-800);
+    --border-3: var(--paper-700);
+    --text-1: var(--paper-50);
+    --text-2: var(--paper-100);
+    --text-3: var(--paper-400);
+    --text-4: var(--paper-500);
+    --text-5: var(--paper-600);
+    --accent: var(--clay-400);
+    --accent-hover: var(--clay-300);
+    --on-accent: var(--paper-950);
+    --accent-text: var(--clay-400);
+    --link: var(--denim-400);
+    --selection: var(--paper-800);
+    --success: var(--moss-400);
+    --warning: var(--honey-400);
+    --danger: var(--brick-400);
+    --info: var(--denim-400);
+    --diff-add: var(--moss-900);
+    --diff-remove: var(--brick-900);
+    --code-keyword: var(--plum-400);
+    --code-function: var(--denim-400);
+    --code-type: var(--sea-400);
+    --code-string: var(--moss-400);
+    --code-number: var(--honey-400);
+    --code-constant: var(--brick-400);
+    --code-comment: var(--paper-500);
 
-    --date: var(--honey-300);
+    --date: var(--honey-400);
     --date-tint: var(--honey-900);
-    --site: var(--sea-300);
+    --site: var(--sea-400);
     --site-tint: var(--sea-900);
-    --link: var(--denim-300);
     --link-tint: var(--denim-800);
-    --here: var(--clay-400);
-    --here-text: var(--clay-300);
-    --here-tint: var(--clay-900);
 
     /* At night the lamp is the only light. */
     --wall-top: #2A231F;
@@ -240,7 +279,8 @@
     @apply font-semibold tracking-tight;
     }
   ::selection {
-    @apply bg-here-tint text-foreground;
+    background-color: var(--selection);
+    color: var(--text-1);
     }
 }
 
@@ -258,12 +298,14 @@
   --tw-prose-bullets: var(--date);
   --tw-prose-hr: var(--border);
   --tw-prose-quote-borders: var(--border);
+  font-family: var(--font-serif);
   font-size: 1.0625rem;
-  line-height: 1.75;
+  line-height: 1.6;
 }
 
 .prose-post :is(h2, h3, h4) {
-  @apply scroll-mt-24 tracking-tight;
+  @apply scroll-mt-24 font-semibold;
+  color: var(--heading);
 }
 
 .prose-post h2 {
@@ -281,7 +323,8 @@
 }
 
 .prose-post :not(pre) > code {
-  @apply rounded-sm bg-muted px-1.5 py-0.5 text-[0.86em] font-normal;
+  @apply rounded-sm bg-card px-1.5 py-0.5 text-[0.82em] font-normal;
+  box-shadow: inset 0 0 0 1px var(--border-1);
 }
 
 .prose-post :not(pre) > code::before,
@@ -290,7 +333,7 @@
 }
 
 .prose-post pre {
-  @apply rounded-md px-5.5 py-4.5 text-[0.8em] leading-relaxed;
+  @apply rounded-md border px-5.5 py-4.5 text-[0.8em] leading-relaxed;
   scrollbar-width: thin;
   scrollbar-color: var(--border) transparent;
 }
@@ -308,23 +351,25 @@
 }
 
 /*
- * Shiki is configured with `defaultColor: false`, so it ships both themes as
- * custom properties and leaves the choice to CSS. The block takes the page's
- * own muted surface rather than the theme's background, so code sits on the
- * paper like the rest.
+ * Shiki draws code with its css-variables theme, so each token takes one of
+ * the theme's code roles and code turns dark with the page.
  */
 .prose-post .astro-code {
-  background-color: var(--muted);
+  --astro-code-foreground: var(--text-2);
+  --astro-code-background: var(--bg-raised);
+  --astro-code-token-keyword: var(--code-keyword);
+  --astro-code-token-function: var(--code-function);
+  --astro-code-token-parameter: var(--text-2);
+  --astro-code-token-string: var(--code-string);
+  --astro-code-token-string-expression: var(--code-string);
+  --astro-code-token-constant: var(--code-constant);
+  --astro-code-token-comment: var(--code-comment);
+  --astro-code-token-punctuation: var(--text-3);
+  --astro-code-token-link: var(--link);
 }
 
-.prose-post .astro-code,
-.prose-post .astro-code span {
-  color: var(--shiki-light);
-}
-
-.dark .prose-post .astro-code,
-.dark .prose-post .astro-code span {
-  color: var(--shiki-dark);
+.prose-post .astro-code :is(span[style*="--astro-code-token-comment"]) {
+  font-style: italic;
 }
 
 .prose-post blockquote {
