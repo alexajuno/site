@@ -42,8 +42,10 @@ const links = [
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		{/* sizes on the .ico keeps Chrome from preferring it over the SVG. */}
+		<link rel="icon" href="/favicon.ico" sizes="32x32" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
+		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 		<link rel="canonical" href={canonical} />
 		<link rel="alternate" type="application/rss+xml" title={siteTitle} href="/rss.xml" />
 		<meta name="generator" content={Astro.generator} />
