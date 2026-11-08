@@ -3,12 +3,6 @@ title: "tuning a circuit breaker with statistics"
 pubDate: 2026-11-02
 ---
 
-prefer to watch? here is the whole post as a 10 min video.
-
-<video controls preload="none" poster="/videos/circuit-breaker.jpg" width="1280" height="720" style="width: 100%; height: auto;">
-  <source src="/videos/circuit-breaker.mp4" type="video/mp4" />
-</video>
-
 recently i faced a common problem in system design: a failing dependency. a service we call started failing part of the time. most calls still worked, but the failing ones hung until our timeout, and only then did we try a fallback. every new call did the same, so while the service was failing, a lot of calls waited out the full timeout.
 
 ```text
