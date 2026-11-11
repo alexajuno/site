@@ -59,16 +59,23 @@ const links = [
 		<meta name="theme-color" content="#F9F5ED" media="(prefers-color-scheme: light)" />
 		<meta name="theme-color" content="#1D1815" media="(prefers-color-scheme: dark)" />
 		{/*
-		 * The theme follows the device until the visitor picks one with the
-		 * toggle, which is stored. Runs inline before first paint so the page
-		 * never flashes the other theme.
+		 * The theme follows the device until the visitor picks light or dark with
+		 * the toggle, which is stored. `data-theme` holds the mode ("system" when
+		 * nothing is stored) for the toggle's icon; `dark` holds the result.
+		 * Runs inline before first paint so the page never flashes the other
+		 * theme, and keeps following the device while the mode is system.
 		 */}
 		<script is:inline>
-			const stored = localStorage.getItem('theme');
-			document.documentElement.classList.toggle(
-				'dark',
-				stored ? stored === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches,
-			);
+			const media = matchMedia('(prefers-color-scheme: dark)');
+			const apply = () => {
+				const stored = localStorage.getItem('theme');
+				const mode = stored === 'light' || stored === 'dark' ? stored : 'system';
+				const root = document.documentElement;
+				root.dataset.theme = mode;
+				root.classList.toggle('dark', mode === 'system' ? media.matches : mode === 'dark');
+			};
+			apply();
+			media.addEventListener('change', apply);
 		</script>
 	</head>
 	<body class="flex min-h-svh flex-col">

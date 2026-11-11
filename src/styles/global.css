@@ -269,6 +269,10 @@
     /* Reserve the scrollbar track always, so a short page like 404 does not
      * sit a scrollbar-width to the right of a long one. */
     scrollbar-gutter: stable;
+    color-scheme: light;
+    }
+  html.dark {
+    color-scheme: dark;
     }
   body {
     @apply bg-background text-foreground antialiased;
